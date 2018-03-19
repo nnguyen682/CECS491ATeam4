@@ -46,7 +46,7 @@ const languageStrings = {
                 "Great moves, keep it up, proud of you, ",
                 "Hey, that's pretty good, ",
                 "I might be a robot, but you just gave me feelings, ",
-                "I couldn't more proud of you"
+                "I couldn't more proud of you",
                 ],
             SKILL_NAME: 'Advice',
             GET_FACT_MESSAGE: "Here's our Advice: ",
