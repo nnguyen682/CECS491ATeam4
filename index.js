@@ -48,6 +48,10 @@ const languageStrings = {
                 "I might be a robot, but you just gave me feelings, ",
                 "I couldn't more proud of you",
                 ],
+            NEGATIVES:[
+                "Sorry to hear that, I'm still here for you and I'm not going anywhere. ",
+                "That's fake news, ",
+                ],
             SKILL_NAME: 'Advice',
             GET_FACT_MESSAGE: "Here's our Advice: ",
             HELP_MESSAGE: 'You can say tell me a Advice, or, you can say exit... What can I help you with?',
@@ -58,7 +62,8 @@ const languageStrings = {
             FEELING_MESSEGE: 'How are you feeling today?',
             HOTLINE_MESSEGE: 'Here is the number for the Suicide Hotline: 1-800-273-8255',
             TEST_MESSEGE: 'Opening state of mind assessment test, Taking an assessment test will overwrite any previous tests, do you want to continue?',
-            WELLCOME_MESSAGE: "Wellcome to Anti Depression Application, our purpose is making you feel better. ",
+
+            WELLCOME_MESSAGE:  "Wellcome to Good Vibes, our purpose is making you feel better. Say help to hear more about what we can help you with, ",
             OPTION_MESSAGE: "We have three options. You can say Advice to listen to one of our advices, say Take a test to take "
             +"our assessment test, or discuss my feelings to start  discussing your feelings ",
         },
@@ -87,17 +92,17 @@ const handlers = {
     'suicideIntention': function () {
         this.emit('Dangerous');
     },
-    
-    'GetFact': function () {
-        // Get a random space fact from the space facts list
-        // Use this.t() to get corresponding language data
-        const adArr = this.t('ADVICES');
+    'Negative': function(){
+        const adArr = this.t('NEGATIVES');
         const adIndex = Math.floor(Math.random() * adArr.length);
         const randomAD = adArr[adIndex];
-
+        this.emit(':ask', randomAD);
+    },
+    'GetFact': function () {
+ 
         // Create speech output
-        const speechOutput =  this.t('WELLCOME_MESSAGE') + this.t('GET_FACT_MESSAGE') +randomAD + this.t('NEXT_MESSEGE') ;
-        this.emit(':ask', speechOutput, this.t('SKILL_NAME'), randomAD);
+        const speechOutput =  this.t('WELLCOME_MESSAGE') ;
+        this.emit(':ask', speechOutput);
     },
  
     'Feeling' : function(){
