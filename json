@@ -1,0 +1,138 @@
+{
+    "interactionModel": {
+        "languageModel": {
+            "invocationName": "good vibes",
+            "intents": [
+                {
+                    "name": "AMAZON.CancelIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.HelpIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.StopIntent",
+                    "samples": [
+                        "No thing",
+                        "No",
+                        "No more",
+                        "Fuck Off"
+                    ]
+                },
+                {
+                    "name": "DiscussingFeelings",
+                    "slots": [],
+                    "samples": [
+                        "tell you",
+                        "i want to tell you something",
+                        "feeling",
+                        "discuss my feelings"
+                    ]
+                },
+                {
+                    "name": "PositiveDoNext",
+                    "slots": [],
+                    "samples": [
+                        "Thanks",
+                        "Thank You",
+                        "Thank you so much",
+                        "Thank you very much",
+                        "I feel much better now",
+                        "I feel much better",
+                        "I feel so much better",
+                        "I am fine now",
+                        "I am alright now",
+                        "I Love you",
+                        "You are the best"
+                    ]
+                },
+                {
+                    "name": "suicideIntention",
+                    "slots": [],
+                    "samples": [
+                        "I want to die",
+                        "I am Dying",
+                        "Kill me",
+                        "Kill myself",
+                        "end my life"
+                    ]
+                },
+                {
+                    "name": "Test",
+                    "slots": [],
+                    "samples": [
+                        "Take assessment  test",
+                        "Take a test",
+                        "assessment",
+                        "assessment test"
+                    ]
+                },
+                {
+                    "name": "Negative",
+                    "slots": [],
+                    "samples": [
+                        "someone just die",
+                        "someone die",
+                        "Horrible",
+                        "I am sad",
+                        "you are bad",
+                        "you are not helpful",
+                        "I feel bad",
+                        "I feel worse",
+                        "bad",
+                        "worse"
+                    ]
+                },
+                {
+                    "name": "Options",
+                    "slots": [],
+                    "samples": [
+                        "help",
+                        "What are options",
+                        "Show me options",
+                        "Remind me of the options",
+                        "options",
+                        "option"
+                    ]
+                },
+                {
+                    "name": "Advice",
+                    "slots": [],
+                    "samples": [
+                        "Help",
+                        "give me a suggestion",
+                        "advices",
+                        "give me some advices",
+                        "advice",
+                        "suggestions"
+                    ]
+                }
+            ],
+            "types": []
+        },
+        "dialog": {
+            "intents": [
+                {
+                    "name": "suicideIntention",
+                    "confirmationRequired": true,
+                    "prompts": {
+                        "confirmation": "Confirm.Intent.493014885069"
+                    },
+                    "slots": []
+                }
+            ]
+        },
+        "prompts": [
+            {
+                "id": "Confirm.Intent.493014885069",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "Did you just say you wanna hurt yourself?"
+                    }
+                ]
+            }
+        ]
+    }
+}
