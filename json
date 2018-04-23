@@ -13,123 +13,271 @@
                 },
                 {
                     "name": "AMAZON.StopIntent",
-                    "samples": [
-                        "No thing",
-                        "No",
-                        "No more",
-                        "Fuck Off"
-                    ]
+                    "samples": []
                 },
                 {
-                    "name": "DiscussingFeelings",
-                    "slots": [],
+                    "name": "DiscussFeeling",
+                    "slots": [
+                        {
+                            "name": "discuss",
+                            "type": "discuss"
+                        },
+                        {
+                            "name": "want",
+                            "type": "want"
+                        },
+                        {
+                            "name": "feeling",
+                            "type": "feelingType",
+                            "samples": [
+                                "I am having a  {feeling} day",
+                                "{feeling}",
+                                "I have a {feeling} day"
+                            ]
+                        }
+                    ],
                     "samples": [
-                        "tell you",
-                        "i want to tell you something",
-                        "feeling",
-                        "discuss my feelings"
-                    ]
-                },
-                {
-                    "name": "PositiveDoNext",
-                    "slots": [],
-                    "samples": [
-                        "Thanks",
-                        "Thank You",
-                        "Thank you so much",
-                        "Thank you very much",
-                        "I feel much better now",
-                        "I feel much better",
-                        "I feel so much better",
-                        "I am fine now",
-                        "I am alright now",
-                        "I Love you",
-                        "You are the best"
-                    ]
-                },
-                {
-                    "name": "suicideIntention",
-                    "slots": [],
-                    "samples": [
-                        "I want to die",
-                        "I am Dying",
-                        "Kill me",
-                        "Kill myself",
-                        "end my life"
-                    ]
-                },
-                {
-                    "name": "Test",
-                    "slots": [],
-                    "samples": [
-                        "Take assessment  test",
-                        "Take a test",
-                        "assessment",
-                        "assessment test"
-                    ]
-                },
-                {
-                    "name": "Negative",
-                    "slots": [],
-                    "samples": [
-                        "someone just die",
-                        "someone die",
-                        "Horrible",
-                        "I am sad",
-                        "you are bad",
-                        "you are not helpful",
-                        "I feel bad",
-                        "I feel worse",
-                        "bad",
-                        "worse"
-                    ]
-                },
-                {
-                    "name": "Options",
-                    "slots": [],
-                    "samples": [
-                        "help",
-                        "What are options",
-                        "Show me options",
-                        "Remind me of the options",
-                        "options",
-                        "option"
+                        "{discuss} my feelings",
+                        "{want} to {discuss}",
+                        "I {want} to {discuss}",
+                        "I {want} to {discuss} my feelings"
                     ]
                 },
                 {
                     "name": "Advice",
-                    "slots": [],
+                    "slots": [
+                        {
+                            "name": "want",
+                            "type": "want"
+                        },
+                        {
+                            "name": "advices",
+                            "type": "advices"
+                        }
+                    ],
                     "samples": [
-                        "Help",
-                        "give me a suggestion",
-                        "advices",
-                        "give me some advices",
-                        "advice",
-                        "suggestions"
+                        "{advices}",
+                        "I {want} some {advices}"
+                    ]
+                },
+                {
+                    "name": "Test",
+                    "slots": [
+                        {
+                            "name": "want",
+                            "type": "want"
+                        },
+                        {
+                            "name": "tests",
+                            "type": "tests"
+                        }
+                    ],
+                    "samples": [
+                        "take an assessment {tests}",
+                        "assessment {tests}",
+                        "I {want} to take an assessment {tests}",
+                        "{tests}",
+                        "take a {tests}",
+                        "I {want} to take a {tests}"
+                    ]
+                },
+                {
+                    "name": "EXTREME",
+                    "slots": [
+                        {
+                            "name": "want",
+                            "type": "want"
+                        },
+                        {
+                            "name": "TRIGGER",
+                            "type": "TRIGGER"
+                        }
+                    ],
+                    "samples": [
+                        "{TRIGGER}",
+                        "I {want} to {TRIGGER}"
                     ]
                 }
             ],
-            "types": []
+            "types": [
+                {
+                    "name": "discuss",
+                    "values": [
+                        {
+                            "name": {
+                                "value": "discuss",
+                                "synonyms": [
+                                    "explain",
+                                    "express",
+                                    "talk about"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "want",
+                    "values": [
+                        {
+                            "name": {
+                                "value": "want",
+                                "synonyms": [
+                                    "demand",
+                                    "wish",
+                                    "need",
+                                    "would like"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "feelingType",
+                    "values": [
+                        {
+                            "id": "average",
+                            "name": {
+                                "value": "average",
+                                "synonyms": [
+                                    "so-so",
+                                    "slow",
+                                    "boring",
+                                    "regular",
+                                    "meh",
+                                    "not good",
+                                    "not bad",
+                                    "alright",
+                                    "okay",
+                                    "ok"
+                                ]
+                            }
+                        },
+                        {
+                            "id": "Good",
+                            "name": {
+                                "value": "Good",
+                                "synonyms": [
+                                    "execellent",
+                                    "marvelous ",
+                                    "nice",
+                                    "amazing",
+                                    "positive",
+                                    "lit",
+                                    "excited",
+                                    "elated",
+                                    "happy",
+                                    "awesome",
+                                    "great"
+                                ]
+                            }
+                        },
+                        {
+                            "id": "Bad",
+                            "name": {
+                                "value": "Bad",
+                                "synonyms": [
+                                    "pretty bad",
+                                    "horrible",
+                                    "lame",
+                                    "fuck up",
+                                    "terrible",
+                                    "garbage",
+                                    "crappy",
+                                    "shitty",
+                                    "negative"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "advices",
+                    "values": [
+                        {
+                            "name": {
+                                "value": "advice",
+                                "synonyms": [
+                                    "recommendation",
+                                    "suggestions",
+                                    "tips"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "tests",
+                    "values": [
+                        {
+                            "name": {
+                                "value": "test",
+                                "synonyms": [
+                                    "exam",
+                                    "quiz"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "TRIGGER",
+                    "values": [
+                        {
+                            "name": {
+                                "value": "Kill myself",
+                                "synonyms": [
+                                    "suicide",
+                                    "commit suicide ",
+                                    "end my life",
+                                    "end myself"
+                                ]
+                            }
+                        }
+                    ]
+                }
+            ]
         },
         "dialog": {
             "intents": [
                 {
-                    "name": "suicideIntention",
-                    "confirmationRequired": true,
-                    "prompts": {
-                        "confirmation": "Confirm.Intent.493014885069"
-                    },
-                    "slots": []
+                    "name": "DiscussFeeling",
+                    "confirmationRequired": false,
+                    "prompts": {},
+                    "slots": [
+                        {
+                            "name": "discuss",
+                            "type": "discuss",
+                            "confirmationRequired": false,
+                            "elicitationRequired": false,
+                            "prompts": {}
+                        },
+                        {
+                            "name": "want",
+                            "type": "want",
+                            "confirmationRequired": false,
+                            "elicitationRequired": false,
+                            "prompts": {}
+                        },
+                        {
+                            "name": "feeling",
+                            "type": "feelingType",
+                            "confirmationRequired": false,
+                            "elicitationRequired": true,
+                            "prompts": {
+                                "elicitation": "Elicit.Slot.1199070203868.572483163178"
+                            }
+                        }
+                    ]
                 }
             ]
         },
         "prompts": [
             {
-                "id": "Confirm.Intent.493014885069",
+                "id": "Elicit.Slot.1199070203868.572483163178",
                 "variations": [
                     {
                         "type": "PlainText",
-                        "value": "Did you just say you wanna hurt yourself?"
+                        "value": "How are you feeling today?"
                     }
                 ]
             }
