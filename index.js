@@ -1,152 +1,672 @@
-/* eslint-disable  func-names */
-/* eslint quote-props: ["error", "consistent"]*/
-/**
- * This sample demonstrates a simple skill built with the Amazon Alexa Skills
- * nodejs skill development kit.
- * This sample supports multiple lauguages. (en-US, en-GB, de-DE).
- * The Intent Schema, Custom Slots and Sample Utterances for this skill, as well
- * as testing instructions are located at https://github.com/alexa/skill-sample-nodejs-fact
- **/
+// SkillCode generated code.
+// Paste this into an AWS Lambda function based on the Fact blueprint.
 
-'use strict';
-
-const Alexa = require('alexa-sdk');
-
-const APP_ID = 'amzn1.ask.skill.01d535e8-9065-4dbb-b124-4424eb354c3e';  
+const invocationName = "good vibes";
 
 const languageStrings = {
-    'en': {
-        translation: {
-            ADVICES: [
-                'Sometimes the most productive thing you can do is relax. ',
-                'The time to relax is when you do not have time for it. ',
-                'The mind should be allowed some relaxation, that it may return to its work all the better for the rest. ',
-                "Relaxation means releasing all concern and tension and letting the natural order of life flow through one's being. ",
-                'Your mind will answer most questions if you learn to relax and wait for the answer. ',
-            ],
-            EXTREME: [
-                "Don't do it! I don't want you to die. ",
-                "There are people that loves you. ",
-                'There are people that needs you. ',
-                "It will be better tomorrow. ",
-                "I don't know what to say. I just don't want you to die. ",
-            ],
-            GOODS:[
-                "It's good to hear that, ",
-                "I am glad that you are having a nice day, ",
-                "Good to know that, ",
-                "That's nice to hear, ",
-                "Glad things are working out for you, ",
-                "I hope to keep hearing good news, ",
-                "I am very proud of you, ",
-                "Keep up the good work, ",
-                "That's great news, ",
-                "Hearing that makes me happy, ",
-                "Hearing that just made my day, ",
-                "Great moves, keep it up, proud of you, ",
-                "Hey, that's pretty good, ",
-                "I might be a robot, but you just gave me feelings, ",
-                "I couldn't more proud of you",
-                ],
-            NEGATIVES:[
-                "Sorry to hear that, I'm still here for you and I'm not going anywhere. ",
-                "That's fake news, ",
-                ],
-            SKILL_NAME: 'Advice',
-            GET_FACT_MESSAGE: "Here's our Advice: ",
-            HELP_MESSAGE: 'You can say tell me a Advice, or, you can say exit... What can I help you with?',
-            HELP_REPROMPT: 'What can I help you with?',
-            STOP_MESSAGE: 'Goodbye!',
-            GOOD_MESSAGE: "It's good to hear that!",
-            NEXT_MESSEGE: 'What would you like to do next?',
-            FEELING_MESSEGE: 'How are you feeling today?',
-            HOTLINE_MESSEGE: 'Here is the number for the Suicide Hotline: 1-800-273-8255',
-            TEST_MESSEGE: 'Opening state of mind assessment test, Taking an assessment test will overwrite any previous tests, do you want to continue?',
-
-            WELLCOME_MESSAGE:  "Wellcome to Good Vibes, our purpose is making you feel better. Say help to hear more about what we can help you with, ",
-            OPTION_MESSAGE: "We have three options. You can say Advice to listen to one of our advices, say Take a test to take "
-            +"our assessment test, or discuss my feelings to start  discussing your feelings ",
-        },
-    },
-
-    
-   
-};
-
-const handlers = {
-    'LaunchRequest': function () {
-        this.emit('GetFact');
-    },
-    'DiscussingFeelings': function () {
-        this.emit('Feeling');
-    },
-    'Options': function(){
-         this.emit(':ask', this.t('OPTION_MESSAGE'));    
-    },
-    'Advice': function(){
-        const adArr = this.t('ADVICES');
-        const adIndex = Math.floor(Math.random() * adArr.length);
-        const randomAD = adArr[adIndex];
-        this.emit(':ask', randomAD);
-    },
-    'suicideIntention': function () {
-        this.emit('Dangerous');
-    },
-    'Negative': function(){
-        const adArr = this.t('NEGATIVES');
-        const adIndex = Math.floor(Math.random() * adArr.length);
-        const randomAD = adArr[adIndex];
-        this.emit(':ask', randomAD);
-    },
-    'GetFact': function () {
- 
-        // Create speech output
-        const speechOutput =  this.t('WELLCOME_MESSAGE') ;
-        this.emit(':ask', speechOutput);
-    },
- 
-    'Feeling' : function(){
-        this.emit(':ask', this.t('FEELING_MESSEGE'));
-    },
-    'Dangerous': function(){
-        const extreArr = this.t('EXTREME');
-        const extreIndex = Math.floor(Math.random() * extreArr.length);
-        const randomExtre = extreArr[extreIndex];
-
-        // Create speech output
-        this.emit(':ask', randomExtre);
-    },
-    'PositiveDoNext' : function(){
-        const goodArr = this.t('GOODS');
-        const goodIndex = Math.floor(Math.random() * goodArr.length);
-        const randomGood = goodArr[goodIndex];
-        // Create speech output
-        const speechOutput =  randomGood + this.t('NEXT_MESSEGE');
-        this.emit(':ask', speechOutput);
-    },
-    'Test': function(){
-        this.emit(':ask', this.t('TEST_MESSEGE'));
-    },
-    'AMAZON.HelpIntent': function () {
-        const speechOutput = this.t('HELP_MESSAGE');
-        const reprompt = this.t('HELP_MESSAGE');
-        this.emit(':ask', speechOutput, reprompt);
-    },
-    'AMAZON.CancelIntent': function () {
-        this.emit(':tell', this.t('STOP_MESSAGE'));
-    },
-    'AMAZON.StopIntent': function () {
-        this.emit(':tell', this.t('STOP_MESSAGE'));
+   'en': {
+        'translation': {
+            'WELCOME1' : 'Welcome to good vibes!',
+            'WELCOME2' : 'Greetings!',
+            'WELCOME3' : 'Hello there!',
+            'HELP'    : 'You can say help, stop, or cancel. ',
+            'STOP'    : 'Goodbye!'
+        }
     }
+    // , 'de-DE': { 'translation' : { 'WELCOME'   : 'German Welcome etc.' } }
+    // , 'jp-JP': { 'translation' : { 'WELCOME'   : 'Japanese Welcome etc.' } }
 };
-    
-    
+const APP_ID = undefined;  // TODO replace with your app ID (OPTIONAL).
 
-exports.handler = function (event, context) {
-    const alexa = Alexa.handler(event, context);
-    alexa.APP_ID = APP_ID;
-    // To enable string internationalization (i18n) features, set a resources object.
+const Alexa = require("alexa-sdk");
+const https = require("https");
+
+exports.handler = function(event, context, callback) {
+    let alexa = Alexa.handler(event, context);
+    alexa.appId = APP_ID; // 
+
     alexa.resources = languageStrings;
+ // alexa.dynamoDBTableName = "myTable"; // persistent session attributes
     alexa.registerHandlers(handlers);
     alexa.execute();
+}
+
+const handlers = {
+    'AMAZON.CancelIntent': function () {
+
+        let say = 'Goodbye.';
+        this.response
+          .speak(say);
+
+        this.emit(':responseReady'); 
+    },
+    'AMAZON.HelpIntent': function () {
+
+        var CustomIntents = getCustomIntents();
+        var MyIntent = randomPhrase(CustomIntents);
+        let say = 'Out of ' + CustomIntents.length + ' intents, here is one called, ' + MyIntent.name + ', just say, ' + MyIntent.samples[0];
+        this.response
+          .speak(say)
+          .listen('try again, ' + say)
+          .cardRenderer('Intent List', cardIntents(CustomIntents)); // , welcomeCardImg
+
+        this.emit(':responseReady'); 
+    },
+    'AMAZON.StopIntent': function () {
+
+        let say = 'Goodbye.';
+        this.response
+          .speak(say);
+
+        this.emit(':responseReady'); 
+    },
+    'DiscussFeeling': function () {
+        // delegate to Alexa to collect all the required slots 
+        let isTestingWithSimulator = false; //autofill slots when using simulator, dialog management is only supported with a device 
+        let filledSlots = delegateSlotCollection.call(this, isTestingWithSimulator); 
+ 
+        if (!filledSlots) { 
+            return; 
+        } 
+ 
+        console.log("filled slots: " + JSON.stringify(filledSlots)); 
+        // at this point, we know that all required slots are filled. 
+        let slotValues = getSlotValues(filledSlots); 
+ 
+        console.log(JSON.stringify(slotValues)); 
+ 
+ 
+        let speechOutput = 'You have filled 1 required slots. ' + 
+        'feeling resolved to,  ' + slotValues.feeling.resolved + '. ' ; 
+ 
+        console.log("Speech output: ", speechOutput); 
+        this.response.speak(speechOutput); 
+        this.emit(':responseReady'); 
+
+        this.emit(':responseReady'); 
+    },
+    'Advice': function () {
+        let say = 'Hello from Advice. ';
+
+        var slotStatus = '';
+        var resolvedSlot;
+
+    //   SLOT: want 
+        if (this.event.request.intent.slots.want.value) {
+            const want = this.event.request.intent.slots.want;
+            slotStatus += ' slot want was heard as ' + want.value + '. ';
+
+            resolvedSlot = resolveCanonical(want);
+
+            if(resolvedSlot != want.value) {
+                slotStatus += ' which resolved to ' + resolvedSlot; 
+            }
+        } else {
+            slotStatus += ' slot want is empty. ';
+        }
+
+    //   SLOT: advices 
+        if (this.event.request.intent.slots.advices.value) {
+            const advices = this.event.request.intent.slots.advices;
+            slotStatus += ' slot advices was heard as ' + advices.value + '. ';
+
+            resolvedSlot = resolveCanonical(advices);
+
+            if(resolvedSlot != advices.value) {
+                slotStatus += ' which resolved to ' + resolvedSlot; 
+            }
+        } else {
+            slotStatus += ' slot advices is empty. ';
+        }
+
+
+        say += slotStatus;
+
+        this.response
+          .speak(say)
+          .listen('try again, ' + say);
+
+
+        this.emit(':responseReady'); 
+    },
+    'Test': function () {
+        let say = 'Hello from Test. ';
+
+        var slotStatus = '';
+        var resolvedSlot;
+
+    //   SLOT: want 
+        if (this.event.request.intent.slots.want.value) {
+            const want = this.event.request.intent.slots.want;
+            slotStatus += ' slot want was heard as ' + want.value + '. ';
+
+            resolvedSlot = resolveCanonical(want);
+
+            if(resolvedSlot != want.value) {
+                slotStatus += ' which resolved to ' + resolvedSlot; 
+            }
+        } else {
+            slotStatus += ' slot want is empty. ';
+        }
+
+    //   SLOT: tests 
+        if (this.event.request.intent.slots.tests.value) {
+            const tests = this.event.request.intent.slots.tests;
+            slotStatus += ' slot tests was heard as ' + tests.value + '. ';
+
+            resolvedSlot = resolveCanonical(tests);
+
+            if(resolvedSlot != tests.value) {
+                slotStatus += ' which resolved to ' + resolvedSlot; 
+            }
+        } else {
+            slotStatus += ' slot tests is empty. ';
+        }
+
+
+        say += slotStatus;
+
+        this.response
+          .speak(say)
+          .listen('try again, ' + say);
+
+
+        this.emit(':responseReady'); 
+    },
+    'EXTREME': function () {
+        let say = 'Hello from EXTREME. ';
+
+        var slotStatus = '';
+        var resolvedSlot;
+
+    //   SLOT: want 
+        if (this.event.request.intent.slots.want.value) {
+            const want = this.event.request.intent.slots.want;
+            slotStatus += ' slot want was heard as ' + want.value + '. ';
+
+            resolvedSlot = resolveCanonical(want);
+
+            if(resolvedSlot != want.value) {
+                slotStatus += ' which resolved to ' + resolvedSlot; 
+            }
+        } else {
+            slotStatus += ' slot want is empty. ';
+        }
+
+    //   SLOT: TRIGGER 
+        if (this.event.request.intent.slots.TRIGGER.value) {
+            const TRIGGER = this.event.request.intent.slots.TRIGGER;
+            slotStatus += ' slot TRIGGER was heard as ' + TRIGGER.value + '. ';
+
+            resolvedSlot = resolveCanonical(TRIGGER);
+
+            if(resolvedSlot != TRIGGER.value) {
+                slotStatus += ' which resolved to ' + resolvedSlot; 
+            }
+        } else {
+            slotStatus += ' slot TRIGGER is empty. ';
+        }
+
+
+        say += slotStatus;
+
+        this.response
+          .speak(say)
+          .listen('try again, ' + say);
+
+
+        this.emit(':responseReady'); 
+    },
+    'LaunchRequest': function () {
+        let say = this.t('WELCOME1') + ' ' + this.t('HELP');
+        this.response
+          .speak(say)
+          .listen('try again, ' + say);
+
+        this.emit(':responseReady'); 
+    },
+    'Unhandled': function () {
+        let say = 'The skill did not quite understand what you wanted.  Do you want to try something else? ';
+        this.response
+          .speak(say)
+          .listen(say);
+}};
+//  ------ Helper Functions -----------------------------------------------
+
+function randomPhrase(myArray) {
+    return(myArray[Math.floor(Math.random() * myArray.length)]);
+}
+
+// returns slot resolved to an expected value if possible
+function resolveCanonical(slot){
+    try {
+        var canonical = slot.resolutions.resolutionsPerAuthority[0].values[0].value.name;
+    } catch(err){
+        console.log(err.message);
+        var canonical = slot.value;
+    };
+    return canonical;
 };
+
+// used to emit :delegate to elicit or confirm Intent Slots
+function delegateSlotCollection(){
+    console.log("current dialogState: " + this.event.request.dialogState);
+    if (this.event.request.dialogState === "STARTED") {
+        var updatedIntent = this.event.request.intent;
+
+        this.emit(":delegate");
+
+    } else if (this.event.request.dialogState !== "COMPLETED") {
+
+        this.emit(":delegate");
+
+    } else {
+        console.log("returning: "+ JSON.stringify(this.event.request.intent));
+
+        return this.event.request.intent;
+    }
+}
+
+function getCustomIntents() {
+    var customIntents = [];
+    for (let i = 0; i < intentsReference.length; i++) {
+        if(intentsReference[i].name.substring(0,7) != "AMAZON." && intentsReference[i].name !== "LaunchRequest" ) {
+            customIntents.push(intentsReference[i]);
+        }
+    }
+    return(customIntents);
+}
+function cardIntents(iArray) {
+    var body = "";    for (var i = 0; i < iArray.length; i++) {
+        body += iArray[i].name + "\n";
+        body += "  '" + iArray[i].samples[0] + "'\n";
+    }
+    return(body);
+}
+
+const welcomeCardImg = {
+    smallImageUrl: "https://m.media-amazon.com/images/G/01/mobile-apps/dex/alexa/alexa-skills-kit/alexa-devs-skill/cards/skill-builder-720x480._TTH_.png",
+    largeImageUrl: "https://m.media-amazon.com/images/G/01/mobile-apps/dex/alexa/alexa-skills-kit/alexa-devs-skill/cards/skill-builder-1200x800._TTH_.png"
+};
+
+ 
+// *********************************** 
+// ** Helper functions from 
+// ** These should not need to be edited 
+// ** www.github.com/alexa/alexa-cookbook 
+// *********************************** 
+ 
+// *********************************** 
+// ** Route to Intent 
+// *********************************** 
+ 
+// after doing the logic in new session, 
+// route to the proper intent 
+ 
+function routeToIntent() { 
+ 
+    switch (this.event.request.type) { 
+        case 'IntentRequest': 
+            this.emit(this.event.request.intent.name); 
+            break; 
+        case 'LaunchRequest': 
+            this.emit('LaunchRequest'); 
+            break; 
+        default: 
+            this.emit('LaunchRequest'); 
+    } 
+} 
+ 
+// *********************************** 
+// ** Dialog Management 
+// *********************************** 
+ 
+function getSlotValues (filledSlots) { 
+    //given event.request.intent.slots, a slots values object so you have 
+    //what synonym the person said - .synonym 
+    //what that resolved to - .resolved 
+    //and if it's a word that is in your slot values - .isValidated 
+    let slotValues = {}; 
+ 
+    console.log('The filled slots: ' + JSON.stringify(filledSlots)); 
+    Object.keys(filledSlots).forEach(function(item) { 
+        //console.log("item in filledSlots: "+JSON.stringify(filledSlots[item])); 
+        var name = filledSlots[item].name; 
+        //console.log("name: "+name); 
+        if(filledSlots[item]&& 
+            filledSlots[item].resolutions && 
+            filledSlots[item].resolutions.resolutionsPerAuthority[0] && 
+            filledSlots[item].resolutions.resolutionsPerAuthority[0].status && 
+            filledSlots[item].resolutions.resolutionsPerAuthority[0].status.code ) { 
+ 
+            switch (filledSlots[item].resolutions.resolutionsPerAuthority[0].status.code) { 
+                case "ER_SUCCESS_MATCH": 
+                    slotValues[name] = { 
+                        "synonym": filledSlots[item].value, 
+                        "resolved": filledSlots[item].resolutions.resolutionsPerAuthority[0].values[0].value.name, 
+                        "isValidated": true 
+                    }; 
+                    break; 
+                case "ER_SUCCESS_NO_MATCH": 
+                    slotValues[name] = { 
+                        "synonym": filledSlots[item].value, 
+                        "resolved": filledSlots[item].value, 
+                        "isValidated":false 
+                    }; 
+                    break; 
+            } 
+        } else { 
+            slotValues[name] = { 
+                "synonym": filledSlots[item].value, 
+                "resolved": filledSlots[item].value, 
+                "isValidated": false 
+            }; 
+        } 
+    },this); 
+    //console.log("slot values: "+JSON.stringify(slotValues)); 
+    return slotValues; 
+} 
+// This function delegates multi-turn dialogs to Alexa. 
+// For more information about dialog directives see the link below. 
+// https://developer.amazon.com/docs/custom-skills/dialog-interface-reference.html 
+function delegateSlotCollection() { 
+    console.log("in delegateSlotCollection"); 
+    console.log("current dialogState: " + this.event.request.dialogState); 
+ 
+    if (this.event.request.dialogState === "STARTED") { 
+        console.log("in STARTED"); 
+        console.log(JSON.stringify(this.event)); 
+        var updatedIntent=this.event.request.intent; 
+        // optionally pre-fill slots: update the intent object with slot values 
+        // for which you have defaults, then return Dialog.Delegate with this 
+        // updated intent in the updatedIntent property 
+ 
+        disambiguateSlot.call(this); 
+        console.log("disambiguated: " + JSON.stringify(this.event)); 
+        this.emit(":delegate", updatedIntent); 
+    } else if (this.event.request.dialogState !== "COMPLETED") { 
+        console.log("in not completed"); 
+        //console.log(JSON.stringify(this.event)); 
+ 
+        disambiguateSlot.call(this); 
+        this.emit(":delegate", updatedIntent); 
+    } else { 
+        console.log("in completed"); 
+        //console.log("returning: "+ JSON.stringify(this.event.request.intent)); 
+        // Dialog is now complete and all required slots should be filled, 
+        // so call your normal intent handler. 
+        return this.event.request.intent.slots; 
+    } 
+    return null; 
+} 
+// If the user said a synonym that maps to more than one value, we need to ask 
+// the user for clarification. Disambiguate slot will loop through all slots and 
+// elicit confirmation for the first slot it sees that resolves to more than 
+// one value. 
+function disambiguateSlot() { 
+    let currentIntent = this.event.request.intent; 
+ 
+    Object.keys(this.event.request.intent.slots).forEach(function(slotName) { 
+        let currentSlot = this.event.request.intent.slots[slotName]; 
+        let slotValue = slotHasValue(this.event.request, currentSlot.name); 
+        if (currentSlot.confirmationStatus !== 'CONFIRMED' && 
+            currentSlot.resolutions && 
+            currentSlot.resolutions.resolutionsPerAuthority[0]) { 
+ 
+            if (currentSlot.resolutions.resolutionsPerAuthority[0].status.code == 'ER_SUCCESS_MATCH') { 
+                // if there's more than one value that means we have a synonym that 
+                // mapped to more than one value. So we need to ask the user for 
+                // clarification. For example if the user said "mini dog", and 
+                // "mini" is a synonym for both "small" and "tiny" then ask "Did you 
+                // want a small or tiny dog?" to get the user to tell you 
+                // specifically what type mini dog (small mini or tiny mini). 
+                if ( currentSlot.resolutions.resolutionsPerAuthority[0].values.length > 1) { 
+                    let prompt = 'Which would you like'; 
+                    let size = currentSlot.resolutions.resolutionsPerAuthority[0].values.length; 
+                    currentSlot.resolutions.resolutionsPerAuthority[0].values.forEach(function(element, index, arr) { 
+                        prompt += ` ${(index == size -1) ? ' or' : ' '} ${element.value.name}`; 
+                    }); 
+ 
+                    prompt += '?'; 
+                    let reprompt = prompt; 
+                    // In this case we need to disambiguate the value that they 
+                    // provided to us because it resolved to more than one thing so 
+                    // we build up our prompts and then emit elicitSlot. 
+                    this.emit(':elicitSlot', currentSlot.name, prompt, reprompt); 
+                } 
+            } else if (currentSlot.resolutions.resolutionsPerAuthority[0].status.code == 'ER_SUCCESS_NO_MATCH') { 
+                // Here is where you'll want to add instrumentation to your code 
+                // so you can capture synonyms that you haven't defined. 
+                console.log("NO MATCH FOR: ", currentSlot.name, " value: ", currentSlot.value); 
+ 
+                if (REQUIRED_SLOTS.indexOf(currentSlot.name) > -1) { 
+                    let prompt = "What " + currentSlot.name + " are you looking for"; 
+                    this.emit(':elicitSlot', currentSlot.name, prompt, prompt); 
+                } 
+            } 
+        } 
+    }, this); 
+} 
+ 
+// Given the request an slot name, slotHasValue returns the slot value if one 
+// was given for `slotName`. Otherwise returns false. 
+function slotHasValue(request, slotName) { 
+ 
+    let slot = request.intent.slots[slotName]; 
+ 
+    //uncomment if you want to see the request 
+    //console.log("request = "+JSON.stringify(request)); 
+    let slotValue; 
+ 
+    //if we have a slot, get the text and store it into speechOutput 
+    if (slot && slot.value) { 
+        //we have a value in the slot 
+        slotValue = slot.value.toLowerCase(); 
+        return slotValue; 
+    } else { 
+        //we didn't get a value in the slot. 
+        return false; 
+    } 
+} 
+ // End Skill Code
+// Language Model  for reference
+var interactionModel = [
+  {
+    "name": "AMAZON.CancelIntent",
+    "samples": []
+  },
+  {
+    "name": "AMAZON.HelpIntent",
+    "samples": []
+  },
+  {
+    "name": "AMAZON.StopIntent",
+    "samples": []
+  },
+  {
+    "name": "DiscussFeeling",
+    "slots": [
+      {
+        "name": "discuss",
+        "type": "discuss"
+      },
+      {
+        "name": "want",
+        "type": "want"
+      },
+      {
+        "name": "feeling",
+        "type": "feelingType",
+        "samples": [
+          "I am having a  {feeling} day",
+          "{feeling}",
+          "I have a {feeling} day"
+        ]
+      }
+    ],
+    "samples": [
+      "{discuss} my feelings",
+      "{want} to {discuss}",
+      "I {want} to {discuss}",
+      "I {want} to {discuss} my feelings"
+    ]
+  },
+  {
+    "name": "Advice",
+    "slots": [
+      {
+        "name": "want",
+        "type": "want"
+      },
+      {
+        "name": "advices",
+        "type": "advices"
+      }
+    ],
+    "samples": [
+      "{advices}",
+      "I {want} some {advices}"
+    ]
+  },
+  {
+    "name": "Test",
+    "slots": [
+      {
+        "name": "want",
+        "type": "want"
+      },
+      {
+        "name": "tests",
+        "type": "tests"
+      }
+    ],
+    "samples": [
+      "take an assessment {tests}",
+      "assessment {tests}",
+      "I {want} to take an assessment {tests}",
+      "{tests}",
+      "take a {tests}",
+      "I {want} to take a {tests}"
+    ]
+  },
+  {
+    "name": "EXTREME",
+    "slots": [
+      {
+        "name": "want",
+        "type": "want"
+      },
+      {
+        "name": "TRIGGER",
+        "type": "TRIGGER"
+      }
+    ],
+    "samples": [
+      "{TRIGGER}",
+      "I {want} to {TRIGGER}"
+    ]
+  },
+  {
+    "name": "LaunchRequest"
+  }
+];
+var intentsReference = [
+  {
+    "name": "AMAZON.CancelIntent",
+    "samples": []
+  },
+  {
+    "name": "AMAZON.HelpIntent",
+    "samples": []
+  },
+  {
+    "name": "AMAZON.StopIntent",
+    "samples": []
+  },
+  {
+    "name": "DiscussFeeling",
+    "slots": [
+      {
+        "name": "discuss",
+        "type": "discuss"
+      },
+      {
+        "name": "want",
+        "type": "want"
+      },
+      {
+        "name": "feeling",
+        "type": "feelingType",
+        "samples": [
+          "I am having a  {feeling} day",
+          "{feeling}",
+          "I have a {feeling} day"
+        ]
+      }
+    ],
+    "samples": [
+      "{discuss} my feelings",
+      "{want} to {discuss}",
+      "I {want} to {discuss}",
+      "I {want} to {discuss} my feelings"
+    ]
+  },
+  {
+    "name": "Advice",
+    "slots": [
+      {
+        "name": "want",
+        "type": "want"
+      },
+      {
+        "name": "advices",
+        "type": "advices"
+      }
+    ],
+    "samples": [
+      "{advices}",
+      "I {want} some {advices}"
+    ]
+  },
+  {
+    "name": "Test",
+    "slots": [
+      {
+        "name": "want",
+        "type": "want"
+      },
+      {
+        "name": "tests",
+        "type": "tests"
+      }
+    ],
+    "samples": [
+      "take an assessment {tests}",
+      "assessment {tests}",
+      "I {want} to take an assessment {tests}",
+      "{tests}",
+      "take a {tests}",
+      "I {want} to take a {tests}"
+    ]
+  },
+  {
+    "name": "EXTREME",
+    "slots": [
+      {
+        "name": "want",
+        "type": "want"
+      },
+      {
+        "name": "TRIGGER",
+        "type": "TRIGGER"
+      }
+    ],
+    "samples": [
+      "{TRIGGER}",
+      "I {want} to {TRIGGER}"
+    ]
+  },
+  {
+    "name": "LaunchRequest"
+  }
+];
