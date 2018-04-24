@@ -26,7 +26,7 @@ exports.handler = function(event, context, callback) {
     alexa.appId = APP_ID; // 
 
     alexa.resources = languageStrings;
- // alexa.dynamoDBTableName = "myTable"; // persistent session attributes
+    alexa.dynamoDBTableName = "table"; // persistent session attributes
     alexa.registerHandlers(handlers);
     alexa.execute();
 }
