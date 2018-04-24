@@ -1,5 +1,4 @@
-// SkillCode generated code.
-// Paste this into an AWS Lambda function based on the Fact blueprint.
+//Good Vibes
 
 const invocationName = "good vibes";
 
