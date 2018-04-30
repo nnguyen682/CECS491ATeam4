@@ -1,14 +1,30 @@
-//Good Vibes
+// Good Vibes
 
 const invocationName = "good vibes";
 
 const languageStrings = {
    'en': {
         'translation': {
-            'WELCOME1' : 'Welcome to good vibes!',
+          ADVICES: [
+                'Sometimes the most productive thing you can do is relax. ',
+                'The time to relax is when you do not have time for it. ',
+                'The mind should be allowed some relaxation, that it may return to its work all the better for the rest. ',
+                "Relaxation means releasing all concern and tension and letting the natural order of life flow through one's being. ",
+                'Your mind will answer most questions if you learn to relax and wait for the answer. ',
+            ],
+            EXTREME: [
+                "Don't do it! I don't want you to die. ",
+                "There are people that love you. ",
+                'There are people that need you. ',
+                "Things will be better tomorrow. ",
+            ],
+            OPTION_MESSAGE: "We have three options. You can say Advice to listen to a piece of advice, say Take a test to take "
+            +"our assessment test, or discuss my feelings to start  discussing your feelings ",
+            FEELING_MESSEGE: 'How are you feeling today?',
+            'WELCOME1' : 'Welcome to good vibes!',//<say-as interpret-as="interjection">dun dun dun!</say-as>
             'WELCOME2' : 'Greetings!',
             'WELCOME3' : 'Hello there!',
-            'HELP'    : 'You can say help, stop, or cancel. ',
+            'HELP'    : 'our purpose is making you feel better. ',
             'STOP'    : 'Goodbye!'
         }
     }
@@ -25,7 +41,7 @@ exports.handler = function(event, context, callback) {
     alexa.appId = APP_ID; // 
 
     alexa.resources = languageStrings;
-    alexa.dynamoDBTableName = "table"; // persistent session attributes
+ // alexa.dynamoDBTableName = "myTable"; // persistent session attributes
     alexa.registerHandlers(handlers);
     alexa.execute();
 }
@@ -41,15 +57,7 @@ const handlers = {
     },
     'AMAZON.HelpIntent': function () {
 
-        var CustomIntents = getCustomIntents();
-        var MyIntent = randomPhrase(CustomIntents);
-        let say = 'Out of ' + CustomIntents.length + ' intents, here is one called, ' + MyIntent.name + ', just say, ' + MyIntent.samples[0];
-        this.response
-          .speak(say)
-          .listen('try again, ' + say)
-          .cardRenderer('Intent List', cardIntents(CustomIntents)); // , welcomeCardImg
-
-        this.emit(':responseReady'); 
+        this.emit(':ask', this.t('OPTION_MESSAGE'));
     },
     'AMAZON.StopIntent': function () {
 
@@ -71,62 +79,40 @@ const handlers = {
         console.log("filled slots: " + JSON.stringify(filledSlots)); 
         // at this point, we know that all required slots are filled. 
         let slotValues = getSlotValues(filledSlots); 
- 
+        
         console.log(JSON.stringify(slotValues)); 
  
- 
+  
         let speechOutput = 'You have filled 1 required slots. ' + 
         'feeling resolved to,  ' + slotValues.feeling.resolved + '. ' ; 
- 
+
         console.log("Speech output: ", speechOutput); 
         this.response.speak(speechOutput); 
-        this.emit(':responseReady'); 
+        if(slotValues.feeling.resolved =="Good")
+        {
+          this.emit(':ask', this.t('OPTION_MESSAGE'));   
+        }
+        else if(slotValues.feeling.resolved =="bad")
+        {
+          this.emit(':ask', this.t('This is bad')); 
+        }
+        else
+        {
+          this.emit(':ask', this.t('This is average')); 
+        }
+        
+        //this.emit(':responseReady'); 
 
-        this.emit(':responseReady'); 
     },
     'Advice': function () {
-        let say = 'Hello from Advice. ';
-
-        var slotStatus = '';
-        var resolvedSlot;
-
-    //   SLOT: want 
-        if (this.event.request.intent.slots.want.value) {
-            const want = this.event.request.intent.slots.want;
-            slotStatus += ' slot want was heard as ' + want.value + '. ';
-
-            resolvedSlot = resolveCanonical(want);
-
-            if(resolvedSlot != want.value) {
-                slotStatus += ' which resolved to ' + resolvedSlot; 
-            }
-        } else {
-            slotStatus += ' slot want is empty. ';
-        }
-
-    //   SLOT: advices 
-        if (this.event.request.intent.slots.advices.value) {
-            const advices = this.event.request.intent.slots.advices;
-            slotStatus += ' slot advices was heard as ' + advices.value + '. ';
-
-            resolvedSlot = resolveCanonical(advices);
-
-            if(resolvedSlot != advices.value) {
-                slotStatus += ' which resolved to ' + resolvedSlot; 
-            }
-        } else {
-            slotStatus += ' slot advices is empty. ';
-        }
+        let say = 'Here is your advice. ';
+        const adArr = this.t('ADVICES');
+        const adIndex = Math.floor(Math.random() * adArr.length);
+        const randomAD = adArr[adIndex];
 
 
-        say += slotStatus;
 
-        this.response
-          .speak(say)
-          .listen('try again, ' + say);
-
-
-        this.emit(':responseReady'); 
+        this.emit(':ask', randomAD);
     },
     'Test': function () {
         let say = 'Hello from Test. ';
@@ -173,48 +159,13 @@ const handlers = {
         this.emit(':responseReady'); 
     },
     'EXTREME': function () {
-        let say = 'Hello from EXTREME. ';
+        const extreArr = this.t('EXTREME');
+        const extreIndex = Math.floor(Math.random() * extreArr.length);
+        const randomExtre = extreArr[extreIndex];
 
-        var slotStatus = '';
-        var resolvedSlot;
+        // Create speech output
+        this.emit(':ask', randomExtre);
 
-    //   SLOT: want 
-        if (this.event.request.intent.slots.want.value) {
-            const want = this.event.request.intent.slots.want;
-            slotStatus += ' slot want was heard as ' + want.value + '. ';
-
-            resolvedSlot = resolveCanonical(want);
-
-            if(resolvedSlot != want.value) {
-                slotStatus += ' which resolved to ' + resolvedSlot; 
-            }
-        } else {
-            slotStatus += ' slot want is empty. ';
-        }
-
-    //   SLOT: TRIGGER 
-        if (this.event.request.intent.slots.TRIGGER.value) {
-            const TRIGGER = this.event.request.intent.slots.TRIGGER;
-            slotStatus += ' slot TRIGGER was heard as ' + TRIGGER.value + '. ';
-
-            resolvedSlot = resolveCanonical(TRIGGER);
-
-            if(resolvedSlot != TRIGGER.value) {
-                slotStatus += ' which resolved to ' + resolvedSlot; 
-            }
-        } else {
-            slotStatus += ' slot TRIGGER is empty. ';
-        }
-
-
-        say += slotStatus;
-
-        this.response
-          .speak(say)
-          .listen('try again, ' + say);
-
-
-        this.emit(':responseReady'); 
     },
     'LaunchRequest': function () {
         let say = this.t('WELCOME1') + ' ' + this.t('HELP');
@@ -398,6 +349,9 @@ function delegateSlotCollection() {
     } 
     return null; 
 } 
+function getRandom(min, max) {
+  return Math.floor((Math.random() * ((max - min) + 1)) + min);
+}
 // If the user said a synonym that maps to more than one value, we need to ask 
 // the user for clarification. Disambiguate slot will loop through all slots and 
 // elicit confirmation for the first slot it sees that resolves to more than 
