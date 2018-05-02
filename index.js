@@ -18,6 +18,11 @@ const languageStrings = {
                 'There are people that need you. ',
                 "Things will be better tomorrow. ",
             ],
+            QUESTIONS: [
+                "Do you feel little interest or pleasure in doing nothing",
+                "Are you feeling down, depressed or hopeless",
+                'do you have trouble falling or staying asleep, or sleeping too much',
+            ],
             OPTION_MESSAGE: "We have three options. You can say Advice to listen to a piece of advice, say Take a test to take "
             +"our assessment test, or discuss my feelings to start  discussing your feelings ",
             FEELING_MESSEGE: 'How are you feeling today?',
@@ -115,48 +120,27 @@ const handlers = {
         this.emit(':ask', randomAD);
     },
     'Test': function () {
-        let say = 'Hello from Test. ';
+      newSessionHandler.call(this);
+        var speechOutput;
+        var reprompt;
+        resetAttributes.call(this);
+        //Initiation of game
 
-        var slotStatus = '';
-        var resolvedSlot;
-
-    //   SLOT: want 
-        if (this.event.request.intent.slots.want.value) {
-            const want = this.event.request.intent.slots.want;
-            slotStatus += ' slot want was heard as ' + want.value + '. ';
-
-            resolvedSlot = resolveCanonical(want);
-
-            if(resolvedSlot != want.value) {
-                slotStatus += ' which resolved to ' + resolvedSlot; 
-            }
-        } else {
-            slotStatus += ' slot want is empty. ';
+        if (this.attributes.skillState != 'gamePlaying') { 
+        
+                speechOutput = '<say-as interpret-as="interjection">dun dun dun.</say-as> Check out the big brains over here. Are you ready to begin?';
+                reprompt = "Are you ready to begin?";
+                this.attributes.skillState = 'quizMainMenu';
+                this.response.speak(speechOutput); //Keeps session open without pinging user..
+                this.response.shouldEndSession(false);
+                this.emit(':responseReady');
+        } 
+        else {
+            speechOutput = 'You are already in the middle of a game. Please answer the question: ' ;
+            this.response.speak(speechOutput);
+            this.response.shouldEndSession(false);
+            this.emit(':responseReady');
         }
-
-    //   SLOT: tests 
-        if (this.event.request.intent.slots.tests.value) {
-            const tests = this.event.request.intent.slots.tests;
-            slotStatus += ' slot tests was heard as ' + tests.value + '. ';
-
-            resolvedSlot = resolveCanonical(tests);
-
-            if(resolvedSlot != tests.value) {
-                slotStatus += ' which resolved to ' + resolvedSlot; 
-            }
-        } else {
-            slotStatus += ' slot tests is empty. ';
-        }
-
-
-        say += slotStatus;
-
-        this.response
-          .speak(say)
-          .listen('try again, ' + say);
-
-
-        this.emit(':responseReady'); 
     },
     'EXTREME': function () {
         const extreArr = this.t('EXTREME');
@@ -174,6 +158,28 @@ const handlers = {
           .listen('try again, ' + say);
 
         this.emit(':responseReady'); 
+    },
+    'AMAZON.YesIntent': function() {
+        var speechOutput;
+        if(this.attributes.skillState == 'quizMainMenu'){
+          speechOutput = '<say-as interpret-as="interjection">Good luck.</say-as> ';
+          this.attributes.skillState = 'gamePlaying';
+          this.response.speak(speechOutput).shouldEndSession(false);
+          this.emit(':responseReady');
+        }
+        else {
+          speechOutput = 'something wrong ';
+          this.response.speak(speechOutput).shouldEndSession(false);
+          this.emit(':responseReady');
+        }
+    },
+    'AMAZON.NoIntent': function() {
+        var speechOutput;
+        var reprompt;
+                    speechOutput = '<say-as interpret-as="interjection">Good luck.</say-as> ';
+            this.attributes.skillState = 'gamePlaying';
+            this.response.speak(speechOutput);
+            this.attributes.lastOutputResponse = speechOutput;
     },
     'Unhandled': function () {
         let say = 'The skill did not quite understand what you wanted.  Do you want to try something else? ';
@@ -214,6 +220,13 @@ function delegateSlotCollection(){
         console.log("returning: "+ JSON.stringify(this.event.request.intent));
 
         return this.event.request.intent;
+    }
+}
+function newSessionHandler() //Called every intent to handle modal/one shot utterances
+{
+    if (this.event.session.new) {
+        var topicNames = [];
+
     }
 }
 
@@ -270,7 +283,6 @@ function routeToIntent() {
 // *********************************** 
 // ** Dialog Management 
 // *********************************** 
- 
 function getSlotValues (filledSlots) { 
     //given event.request.intent.slots, a slots values object so you have 
     //what synonym the person said - .synonym 
@@ -349,6 +361,17 @@ function delegateSlotCollection() {
     } 
     return null; 
 } 
+function resetAttributes() {
+    this.attributes.skillState = null;
+    //this.attributes.selectedValueIndex = null;
+    //this.attributes.questionNumber = null;
+    //this.attributes.correctIndex = null;
+    //this.attributes.onScreenOptions = null;
+    //this.attributes.quizArray = null;
+    //this.attributes.QuizOptionArray = null;
+    //this.attributes.correctAnswersNo = null;
+    //this.attributes.storedQuestion = null;
+}
 function getRandom(min, max) {
   return Math.floor((Math.random() * ((max - min) + 1)) + min);
 }
