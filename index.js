@@ -23,6 +23,12 @@ const languageStrings = {
                 "How often Are you feeling down, depressed or hopeless",
                 'How often do you have trouble falling or staying asleep, or sleeping too much',
             ],
+            IFTHISISBAD:[
+                "Be kinder to yourself",
+                "Things will get brighter",
+                "That's fake news",
+                "It's ok to give yourself some space to breathe and regroup.",
+              ],
             OPTION_MESSAGE: "We have three options. You can say Advice to listen to a piece of advice, say Take a test to take "
             +"our assessment test, or discuss my feelings to start  discussing your feelings ",
             FEELING_MESSEGE: 'How are you feeling today?',
@@ -148,15 +154,21 @@ const handlers = {
           let slotValues = getSlotValues(filledSlots); 
           if(slotValues.feeling.resolved =="Good")
           {
-            this.emit(':ask', this.t('This is good'));   
+            this.attributes.skillState = null;
+            this.emit(':ask', this.t('Glad to hear that, keep up the good work'));   
           }
-          else if(slotValues.feeling.resolved =="bad")
+          else if(slotValues.feeling.resolved =="Bad")
           {
-            this.emit(':ask', this.t('This is bad')); 
+            this.attributes.skillState = null;
+            const adArr = this.t('IFTHISISBAD');
+            const adIndex = Math.floor(Math.random() * adArr.length);
+            const randomAD = adArr[adIndex];
+            this.emit(':ask', randomAD);
           }
           else
           {
-            this.emit(':ask', this.t('This is average')); 
+            this.attributes.skillState = null;
+            this.emit(':ask', this.t('Do something that would improve your day.')); 
           }
         }
 
