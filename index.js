@@ -19,9 +19,9 @@ const languageStrings = {
                 "Things will be better tomorrow. ",
             ],
             QUESTIONS: [
-                "Do you feel little interest or pleasure in doing nothing",
-                "Are you feeling down, depressed or hopeless",
-                'do you have trouble falling or staying asleep, or sleeping too much',
+                "How often do you feel little interest or pleasure in doing nothing",
+                "How often Are you feeling down, depressed or hopeless",
+                'How often do you have trouble falling or staying asleep, or sleeping too much',
             ],
             OPTION_MESSAGE: "We have three options. You can say Advice to listen to a piece of advice, say Take a test to take "
             +"our assessment test, or discuss my feelings to start  discussing your feelings ",
@@ -61,82 +61,149 @@ const handlers = {
         this.emit(':responseReady'); 
     },
     'AMAZON.HelpIntent': function () {
-
-        this.emit(':ask', this.t('OPTION_MESSAGE'));
+      var speechOutput
+        if(this.attributes.skillState == "Numbers")
+        {
+            speechOutput = 'You are in the middle of the test, Please choose a number from 0 to 3';
+            this.response.speak(speechOutput);
+            this.response.shouldEndSession(false);
+            this.emit(':responseReady');
+        }
+        else if (this.attributes.skillState == 'quizMainMenu') { 
+        
+            speechOutput = 'Please answer yes or no to start a quiz or not';
+            this.response.speak(speechOutput);
+            this.response.shouldEndSession(false);
+            this.emit(':responseReady');
+        }
+        else if (this.attributes.skillState == 'discuss')
+        {
+            this.attributes.skillState = null;
+          speechOutput = 'I asked how are you feeling today. Maybe you should take a rest. What would you like to do next?';
+          this.response.speak(speechOutput).shouldEndSession(false);
+          this.emit(':responseReady');
+        }
+        else 
+        {
+        let say = this.t('OPTION_MESSAGE');
+        this.response
+          .speak(say)
+          .shouldEndSession(false);
+        this.emit(':responseReady'); 
+        }  
     },
     'AMAZON.StopIntent': function () {
-
+      var speechOutput
+        if(this.attributes.skillState == "Numbers")
+        {
+            speechOutput = 'We are getting out of the test. What would you like to do next?' ;
+            this.attributes.skillState= null;
+            this.response.speak(speechOutput);
+            this.response.shouldEndSession(false);
+            this.emit(':responseReady');
+        }
+        else if (this.attributes.skillState == 'quizMainMenu') { 
+        
+          speechOutput = 'We are getting out of the test. Come back when you are ready!' ;
+            this.attributes.skillState= null;
+            this.response.speak(speechOutput);
+            this.response.shouldEndSession(false);
+            this.emit(':responseReady');
+        }
+        else 
+        {
+        if(this.attributes.Result != null)
+        {
+          let say = 'Here is the reminder of what you get from the test.';
+          say += this.attributes.Result;
+          say += ' Goodbye.';
+        this.response
+          .speak(say);
+        this.emit(':responseReady'); 
+        }
         let say = 'Goodbye.';
         this.response
           .speak(say);
-
         this.emit(':responseReady'); 
-    },
+        }  
+          
+  },
     'DiscussFeeling': function () {
-        // delegate to Alexa to collect all the required slots 
-        let isTestingWithSimulator = false; //autofill slots when using simulator, dialog management is only supported with a device 
-        let filledSlots = delegateSlotCollection.call(this, isTestingWithSimulator); 
- 
-        if (!filledSlots) { 
-            return; 
-        } 
- 
-        console.log("filled slots: " + JSON.stringify(filledSlots)); 
-        // at this point, we know that all required slots are filled. 
-        let slotValues = getSlotValues(filledSlots); 
         
-        console.log(JSON.stringify(slotValues)); 
- 
-  
-        let speechOutput = 'You have filled 1 required slots. ' + 
-        'feeling resolved to,  ' + slotValues.feeling.resolved + '. ' ; 
-
-        console.log("Speech output: ", speechOutput); 
-        this.response.speak(speechOutput); 
-        if(slotValues.feeling.resolved =="Good")
-        {
-          this.emit(':ask', this.t('OPTION_MESSAGE'));   
-        }
-        else if(slotValues.feeling.resolved =="bad")
-        {
-          this.emit(':ask', this.t('This is bad')); 
-        }
-        else
-        {
-          this.emit(':ask', this.t('This is average')); 
-        }
         
-        //this.emit(':responseReady'); 
+        var speechOutput;
+        if (this.attributes.skillState == 'quizMainMenu'){
+                speechOutput = 'Please answer yes or no to start a quiz or not';
+                this.response.speak(speechOutput); //Keeps session open without pinging user..
+                this.response.shouldEndSession(false);
+                this.emit(':responseReady');
+        }
+        else{
+          this.attributes.skillState = 'discuss'
+          // delegate to Alexa to collect all the required slots 
+          let filledSlots = delegateSlotCollection.call(this); 
+          if (!filledSlots) { 
+              return; 
+          } 
+          let slotValues = getSlotValues(filledSlots); 
+          if(slotValues.feeling.resolved =="Good")
+          {
+            this.emit(':ask', this.t('This is good'));   
+          }
+          else if(slotValues.feeling.resolved =="bad")
+          {
+            this.emit(':ask', this.t('This is bad')); 
+          }
+          else
+          {
+            this.emit(':ask', this.t('This is average')); 
+          }
+        }
 
     },
     'Advice': function () {
-        let say = 'Here is your advice. ';
-        const adArr = this.t('ADVICES');
-        const adIndex = Math.floor(Math.random() * adArr.length);
-        const randomAD = adArr[adIndex];
+        var speechOutput;
+        if (this.attributes.skillState == 'quizMainMenu'){
+            speechOutput = 'Please answer yes or no to start a quiz or not';
+                this.response.speak(speechOutput); //Keeps session open without pinging user..
+                this.response.shouldEndSession(false);
+                this.emit(':responseReady');
+        }
+        else{
+          let say = 'Here is your advice. ';
+          const adArr = this.t('ADVICES');
+          const adIndex = Math.floor(Math.random() * adArr.length);
+          const randomAD = adArr[adIndex];
+          this.emit(':ask', randomAD);
+        }
 
 
-
-        this.emit(':ask', randomAD);
+        
     },
     'Test': function () {
       newSessionHandler.call(this);
         var speechOutput;
         var reprompt;
-        resetAttributes.call(this);
+        
         //Initiation of game
 
-        if (this.attributes.skillState != 'gamePlaying') { 
-        
-                speechOutput = '<say-as interpret-as="interjection">dun dun dun.</say-as> Check out the big brains over here. Are you ready to begin?';
-                reprompt = "Are you ready to begin?";
+        if (this.attributes.skillState == null) { 
+                resetAttributes.call(this);
+                speechOutput = 'We gonna ask you some questions, please say zero for not at all. One for several days. Two for more than half the days. Three for nearly every day. Are you ready to begin?';
                 this.attributes.skillState = 'quizMainMenu';
                 this.response.speak(speechOutput); //Keeps session open without pinging user..
                 this.response.shouldEndSession(false);
                 this.emit(':responseReady');
         } 
+        else if (this.attributes.skillState == 'quizMainMenu') { 
+        
+                speechOutput = 'Please answer yes or no to start a quiz or not';
+                this.response.speak(speechOutput); //Keeps session open without pinging user..
+                this.response.shouldEndSession(false);
+                this.emit(':responseReady');
+        } 
         else {
-            speechOutput = 'You are already in the middle of a game. Please answer the question: ' ;
+            speechOutput = 'You are already in the middle of a game. Please choose a number from 0 to 3: ' ;
             this.response.speak(speechOutput);
             this.response.shouldEndSession(false);
             this.emit(':responseReady');
@@ -162,24 +229,149 @@ const handlers = {
     'AMAZON.YesIntent': function() {
         var speechOutput;
         if(this.attributes.skillState == 'quizMainMenu'){
-          speechOutput = '<say-as interpret-as="interjection">Good luck.</say-as> ';
-          this.attributes.skillState = 'gamePlaying';
+          this.attributes.quizScore = 0;
+          this.attributes.quizNo = 0;
+          const extreArr = this.t('QUESTIONS');
+          const randomExtre = extreArr[this.attributes.quizNo];
+          speechOutput = randomExtre;
+          this.attributes.skillState = 'Numbers';
+          this.response.speak(speechOutput).shouldEndSession(false);
+          this.emit(':responseReady');
+        }
+        else if(this.attributes.skillState =='Numbers')
+        {
+          speechOutput = 'You are in the middle of the test, Please choose a number from 0 to 3 ';
+          this.response.speak(speechOutput).shouldEndSession(false);
+          this.emit(':responseReady');
+        }
+        else if(this.attributes.skillState =='discuss')
+        {
+          this.attributes.skillState = null;
+          speechOutput = 'I asked how are you feeling today. Maybe you should take a rest. What would you like to do next?';
           this.response.speak(speechOutput).shouldEndSession(false);
           this.emit(':responseReady');
         }
         else {
-          speechOutput = 'something wrong ';
+          speechOutput = "Yes what? I didn't ask you anything";
           this.response.speak(speechOutput).shouldEndSession(false);
           this.emit(':responseReady');
         }
     },
+    'Numbers': function () {
+      var speechOutput;
+      
+         if(this.attributes.skillState == 'Numbers'){
+           if(this.attributes.quizNo<2){
+              var numberValue = this.event.request.intent.slots.number.value;
+              if(numberValue ==0)
+                this.attributes.quizScore += 0;
+              else if(numberValue ==1)
+                this.attributes.quizScore += 1;
+              else if(numberValue ==2)
+                this.attributes.quizScore += 2;
+              else if(numberValue ==3)
+                this.attributes.quizScore += 3;
+              this.attributes.quizNo +=1;
+              const extreArr = this.t('QUESTIONS');
+              const randomExtre = extreArr[this.attributes.quizNo];
+              speechOutput = randomExtre;
+              this.response.speak(speechOutput).shouldEndSession(false);
+              this.emit(':responseReady');
+           }
+            else if (this.attributes.quizNo==2){
+              
+            var result;
+            var numberValue = this.event.request.intent.slots.number.value;
+            if(numberValue ==0)
+                this.attributes.quizScore += 0;
+              else if(numberValue ==1)
+                this.attributes.quizScore += 1;
+              else if(numberValue ==2)
+                this.attributes.quizScore += 2;
+              else if(numberValue ==3)
+                this.attributes.quizScore += 3;
+           const adArr = this.t('ADVICES');
+           const adIndex = Math.floor(Math.random() * adArr.length);
+           const randomAD = adArr[adIndex];
+            if(this.attributes.quizScore<=3)
+            {
+              this.attributes.skillState = null;
+              result = 'Minimal depression.';
+              speechOutput = 'Based on the result, you fit under category of ' + result;
+              speechOutput += ' You are in pretty good shape.'
+              this.attributes.Result = speechOutput;
+              this.response.speak(speechOutput).shouldEndSession(false);
+              this.emit(':responseReady');
+            }
+            else if(this.attributes.quizScore <=6)
+            {
+              this.attributes.skillState = null;
+              result = 'Moderate depression.';
+              speechOutput = 'Based on the result, you fit under category of ' + result;
+              speechOutput += ' Here is the advice that might helps you. '+randomAD;
+              this.attributes.Result = speechOutput;
+              this.response.speak(speechOutput).shouldEndSession(false);
+              this.emit(':responseReady');
+              
+            }
+            else 
+            {
+              this.attributes.skillState = null;
+              result = 'Severe depression.';
+              speechOutput = 'Based on the result, you fit under category of ' + result;
+              speechOutput += ' Here is the advice that might helps you. '+randomAD;
+              this.attributes.Result = speechOutput;
+              this.response.speak(speechOutput).shouldEndSession(false);
+              this.emit(':responseReady');
+              
+            }
+            
+            
+           }
+         }
+         else if(this.attributes.skillState == 'quizMainMenu')
+         {
+            speechOutput = 'Please say yes or no';
+            this.response.speak(speechOutput).shouldEndSession(false);
+            this.emit(':responseReady');
+         }
+         
+         else{
+            speechOutput = 'something wrong ';
+            this.response.speak(speechOutput).shouldEndSession(false);
+            this.emit(':responseReady');
+         }
+      
+     
+    },
+        
     'AMAZON.NoIntent': function() {
         var speechOutput;
-        var reprompt;
-                    speechOutput = '<say-as interpret-as="interjection">Good luck.</say-as> ';
-            this.attributes.skillState = 'gamePlaying';
+        if(this.attributes.skillState == 'Numbers'){
+              speechOutput = 'You are in the middle of the quiz, Please choose a number from 0 to 3 ';
             this.response.speak(speechOutput);
             this.attributes.lastOutputResponse = speechOutput;
+        }
+        else if(this.attributes.skillState == 'quizMainMenu'){
+            speechOutput = 'Come back next time when you are ready';
+            this.attributes.skillState = null;
+            this.response.speak(speechOutput).shouldEndSession(false);
+            this.emit(':responseReady');
+        }
+        else if(this.attributes.skillState == 'discuss')
+        {
+          this.attributes.skillState = null;
+          speechOutput = 'I asked how are you feeling today. Maybe you should take a rest. What would you like to do next?';
+          this.response.speak(speechOutput).shouldEndSession(false);
+          this.emit(':responseReady');
+        }
+        else {
+          speechOutput = "No what? I didn't ask you anything";
+          this.response.speak(speechOutput).shouldEndSession(false);
+          this.emit(':responseReady');
+        }
+        
+            
     },
     'Unhandled': function () {
         let say = 'The skill did not quite understand what you wanted.  Do you want to try something else? ';
@@ -362,11 +554,9 @@ function delegateSlotCollection() {
     return null; 
 } 
 function resetAttributes() {
-    this.attributes.skillState = null;
-    //this.attributes.selectedValueIndex = null;
-    //this.attributes.questionNumber = null;
-    //this.attributes.correctIndex = null;
-    //this.attributes.onScreenOptions = null;
+    this.attributes.quizScore = 0;
+    this.attributes.quizNo = 0;
+    this.attributes.Result = null;
     //this.attributes.quizArray = null;
     //this.attributes.QuizOptionArray = null;
     //this.attributes.correctAnswersNo = null;
