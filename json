@@ -9,11 +9,20 @@
                 },
                 {
                     "name": "AMAZON.HelpIntent",
-                    "samples": []
+                    "samples": [
+                        "What can you help me with",
+                        "I don't know how to start this",
+                        "I don't know what to do",
+                        "Help"
+                    ]
                 },
                 {
                     "name": "AMAZON.StopIntent",
-                    "samples": []
+                    "samples": [
+                        "get out",
+                        "exit",
+                        "stop"
+                    ]
                 },
                 {
                     "name": "DiscussFeeling",
@@ -37,6 +46,8 @@
                         }
                     ],
                     "samples": [
+                        "{discuss}",
+                        "{discuss} feelings",
                         "{discuss} my feelings",
                         "{want} to {discuss}",
                         "I {want} to {discuss}",
@@ -53,11 +64,17 @@
                         {
                             "name": "advices",
                             "type": "advices"
+                        },
+                        {
+                            "name": "some",
+                            "type": "some"
                         }
                     ],
                     "samples": [
+                        "give me {some} {advices}",
+                        "{want} {some} {advices}",
                         "{advices}",
-                        "I {want} some {advices}"
+                        "I {want} {some} {advices}"
                     ]
                 },
                 {
@@ -96,6 +113,38 @@
                     "samples": [
                         "{TRIGGER}",
                         "I {want} to {TRIGGER}"
+                    ]
+                },
+                {
+                    "name": "AMAZON.YesIntent",
+                    "samples": [
+                        "hell yeah",
+                        "yeah",
+                        "let's do it",
+                        "let's go",
+                        "sure",
+                        "yes"
+                    ]
+                },
+                {
+                    "name": "AMAZON.NoIntent",
+                    "samples": [
+                        "meh",
+                        "ugh",
+                        "nah",
+                        "no"
+                    ]
+                },
+                {
+                    "name": "Numbers",
+                    "slots": [
+                        {
+                            "name": "number",
+                            "type": "numbers"
+                        }
+                    ],
+                    "samples": [
+                        "{number}"
                     ]
                 }
             ],
@@ -144,8 +193,6 @@
                                     "boring",
                                     "regular",
                                     "meh",
-                                    "not good",
-                                    "not bad",
                                     "alright",
                                     "okay",
                                     "ok"
@@ -226,10 +273,76 @@
                             "name": {
                                 "value": "Kill myself",
                                 "synonyms": [
+                                    "die",
                                     "suicide",
                                     "commit suicide ",
                                     "end my life",
                                     "end myself"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "some",
+                    "values": [
+                        {
+                            "name": {
+                                "value": "some",
+                                "synonyms": [
+                                    "few",
+                                    "any"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "numbers",
+                    "values": [
+                        {
+                            "name": {
+                                "value": "3",
+                                "synonyms": [
+                                    "three"
+                                ]
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "2",
+                                "synonyms": [
+                                    "two"
+                                ]
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "1",
+                                "synonyms": [
+                                    "one"
+                                ]
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "0",
+                                "synonyms": [
+                                    "zero"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Exit",
+                    "values": [
+                        {
+                            "name": {
+                                "value": "Exit",
+                                "synonyms": [
+                                    "Stop",
+                                    "Get Out"
                                 ]
                             }
                         }
