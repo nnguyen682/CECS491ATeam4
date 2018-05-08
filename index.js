@@ -11,12 +11,15 @@ const languageStrings = {
                 'The mind should be allowed some relaxation, that it may return to its work all the better for the rest. ',
                 "Relaxation means releasing all concern and tension and letting the natural order of life flow through one's being. ",
                 'Your mind will answer most questions if you learn to relax and wait for the answer. ',
+                'Make sure you floss your teeth today! Its more important than you think.',
+                'Give someone a hug today.',
+                'Dont sweat the small things.',
             ],
             EXTREME: [
                 "Don't do it! I don't want you to die. ",
                 "There are people that love you. ",
                 'There are people that need you. ',
-                "Things will be better tomorrow. ",
+                "Things will get better tomorrow. ",
             ],
             QUESTIONS: [
                 "How often did you feel little interest or pleasure in doing things",
@@ -24,9 +27,9 @@ const languageStrings = {
                 'How often did you have trouble falling or staying asleep, or sleeping too much',
             ],
             IFTHISISBAD:[
-                "Be kinder to yourself",
-                "Things will get brighter",
-                "That's fake news",
+                "Be kind to yourself",
+                "Keep your head up, Things will get brighter",
+                "That's fake news. If you change your mentality, you can change your reality",
                 "It's ok to give yourself some space to breathe and regroup.",
               ],
             OPTION_MESSAGE: "We have three options. You can say Advice to listen to a piece of advice, say Take a test to take "
