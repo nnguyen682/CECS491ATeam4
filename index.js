@@ -19,9 +19,9 @@ const languageStrings = {
                 "Things will be better tomorrow. ",
             ],
             QUESTIONS: [
-                "How often do you feel little interest or pleasure in doing nothing",
-                "How often Are you feeling down, depressed or hopeless",
-                'How often do you have trouble falling or staying asleep, or sleeping too much',
+                "How often did you feel little interest or pleasure in doing things",
+                "How often did you feel down, depressed or hopeless",
+                'How often did you have trouble falling or staying asleep, or sleeping too much',
             ],
             IFTHISISBAD:[
                 "Be kinder to yourself",
@@ -70,7 +70,7 @@ const handlers = {
       var speechOutput
         if(this.attributes.skillState == "Numbers")
         {
-            speechOutput = 'You are in the middle of the test, Please choose a number from 0 to 3';
+            speechOutput = 'You are in the middle of a test, Please choose a number from 0 to 3';
             this.response.speak(speechOutput);
             this.response.shouldEndSession(false);
             this.emit(':responseReady');
@@ -120,7 +120,7 @@ const handlers = {
         {
         if(this.attributes.Result != null)
         {
-          let say = 'Here is the reminder of what you get from the test.';
+          let say = 'Here is a reminder of what you got from the test.';
           say += this.attributes.Result;
           say += ' Goodbye.';
         this.response
@@ -139,7 +139,7 @@ const handlers = {
         
         var speechOutput;
         if (this.attributes.skillState == 'quizMainMenu'){
-                speechOutput = 'Please answer yes or no to start a quiz or not';
+                speechOutput = 'Please answer yes or no to start the quiz or not';
                 this.response.speak(speechOutput); //Keeps session open without pinging user..
                 this.response.shouldEndSession(false);
                 this.emit(':responseReady');
@@ -201,7 +201,7 @@ const handlers = {
 
         if (this.attributes.skillState == null) { 
                 resetAttributes.call(this);
-                speechOutput = 'We gonna ask you some questions, please say zero for not at all. One for several days. Two for more than half the days. Three for nearly every day. Are you ready to begin?';
+                speechOutput = 'I will ask you three questions based on your experiences within the past two weeks. To answer these questions, please say zero for not at all. One for several days. Two for more than half the days. And three for nearly every day. Are you ready to begin?';
                 this.attributes.skillState = 'quizMainMenu';
                 this.response.speak(speechOutput); //Keeps session open without pinging user..
                 this.response.shouldEndSession(false);
@@ -209,13 +209,13 @@ const handlers = {
         } 
         else if (this.attributes.skillState == 'quizMainMenu') { 
         
-                speechOutput = 'Please answer yes or no to start a quiz or not';
+                speechOutput = 'Please answer yes or no to start the quiz or not';
                 this.response.speak(speechOutput); //Keeps session open without pinging user..
                 this.response.shouldEndSession(false);
                 this.emit(':responseReady');
         } 
         else {
-            speechOutput = 'You are already in the middle of a game. Please choose a number from 0 to 3: ' ;
+            speechOutput = 'You are already in the middle of a quiz. Please choose a number from 0 to 3: ' ;
             this.response.speak(speechOutput);
             this.response.shouldEndSession(false);
             this.emit(':responseReady');
@@ -252,7 +252,7 @@ const handlers = {
         }
         else if(this.attributes.skillState =='Numbers')
         {
-          speechOutput = 'You are in the middle of the test, Please choose a number from 0 to 3 ';
+          speechOutput = 'You are in the middle of a test, Please choose a number from 0 to 3 ';
           this.response.speak(speechOutput).shouldEndSession(false);
           this.emit(':responseReady');
         }
@@ -309,7 +309,7 @@ const handlers = {
             {
               this.attributes.skillState = null;
               result = 'Minimal depression.';
-              speechOutput = 'Based on the result, you fit under category of ' + result;
+              speechOutput = 'Based on the test results, you fall under the category of ' + result;
               speechOutput += ' You are in pretty good shape.'
               this.attributes.Result = speechOutput;
               this.response.speak(speechOutput).shouldEndSession(false);
@@ -319,8 +319,8 @@ const handlers = {
             {
               this.attributes.skillState = null;
               result = 'Moderate depression.';
-              speechOutput = 'Based on the result, you fit under category of ' + result;
-              speechOutput += ' Here is the advice that might helps you. '+randomAD;
+              speechOutput = 'Based on the test results, you fall under the category of ' + result;
+              speechOutput += ' Here is some advice that might help you. '+randomAD;
               this.attributes.Result = speechOutput;
               this.response.speak(speechOutput).shouldEndSession(false);
               this.emit(':responseReady');
@@ -330,8 +330,8 @@ const handlers = {
             {
               this.attributes.skillState = null;
               result = 'Severe depression.';
-              speechOutput = 'Based on the result, you fit under category of ' + result;
-              speechOutput += ' Here is the advice that might helps you. '+randomAD;
+              speechOutput = 'Based on the test results, you fall under the category of ' + result;
+              speechOutput += ' Here is some advice that might help you. '+randomAD;
               this.attributes.Result = speechOutput;
               this.response.speak(speechOutput).shouldEndSession(false);
               this.emit(':responseReady');
@@ -360,7 +360,7 @@ const handlers = {
     'AMAZON.NoIntent': function() {
         var speechOutput;
         if(this.attributes.skillState == 'Numbers'){
-              speechOutput = 'You are in the middle of the quiz, Please choose a number from 0 to 3 ';
+              speechOutput = 'You are in the middle of a quiz, Please choose a number from 0 to 3 ';
             this.response.speak(speechOutput);
             this.attributes.lastOutputResponse = speechOutput;
         }
@@ -386,7 +386,7 @@ const handlers = {
             
     },
     'Unhandled': function () {
-        let say = 'The skill did not quite understand what you wanted.  Do you want to try something else? ';
+        let say = 'The skill did not quite understand what you wanted to do.  Do you want to try something else? ';
         this.response
           .speak(say)
           .listen(say);
