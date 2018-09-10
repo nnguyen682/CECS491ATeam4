@@ -1,0 +1,33 @@
+How to Connect a Lambda Function to a DynamoDB Table
+
+Step 1: Create a DynamoDB Table
+	-table name should be similar to our function's name (not necessary, but good practice)
+	-primary(partition) key must be called "userId" of type String
+	-click create table and we're good
+
+Step 2: Grant access between Lambda Function and DynamoDB Table
+	-check what the existing role for the Lambda Function is
+	-open IAM role manager and locate the existing role from our Lambda Function
+	-click on the role and select attach policy
+	-type "dynamo" in the search bar
+	-select the "AmazonDynamoDBFullAccess" policy name and click attach policy
+	-go back to the Lambda Function, refresh it, and see if Amazon DynamoDB was added to the column on the right
+	
+Step 3:	Adjust the Lambda Function code
+	-create tablename reference at bottom of code
+		alexa.dynamoDBTableName = 'insertTableNameHere';
+
+	-insert code for storing data wherever it's applicable 
+		this.attributes['tableAttributeName'] = 'existing variable value';
+
+	-insert code to read data wherever it's applicable
+		this.attributes['tableAttributeName']
+
+Notes:	-attribute names are created within the Lambda Function(not from the DynamoDB interface)
+
+	-if an attribute value has been stored by a user and an assignment operator is called on that same attribute for the same user
+	 then the value for that attribute will be overwritten by the new user input(unless handled by block statements)
+
+	-the primary key "userId" will automatically uniquely identify by individual users without having to apply any new logic
+	 from within the Lambda Function code
+	
