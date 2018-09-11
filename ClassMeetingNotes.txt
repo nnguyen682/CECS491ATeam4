@@ -1,0 +1,10 @@
+Lavander Oil on the soles of my feet
+
+Suggestions could be information that we as the developers would find useful.
+
+Find the line between generic (common sense) information and liability conflicts.
+
+Add a humorous spin (meta behavior)
+	-the application can state that it is aware that it is not a perfect therapy device
+
+Could add sound effects to avoid monotony (only when appropriate)
