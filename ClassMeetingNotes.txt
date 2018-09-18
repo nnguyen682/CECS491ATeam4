@@ -8,3 +8,10 @@ Add a humorous spin (meta behavior)
 	-the application can state that it is aware that it is not a perfect therapy device
 
 Could add sound effects to avoid monotony (only when appropriate)
+
+Additional source to understand general symptoms of depression:
+https://www.rexulti.com/us/mdd/about-depression/?ceid=9185&utm_source=bing&utm_medium=cpc&utm_campaign=unbrandedmdd_dtc&utm_term=dealingwithclinicaldepression&utm_content=unbranded_textad
+
+Some of the basic facts in the link above may be included into the application.
+	There is a questionaire involved
+	Also includes a link to seek help from a professional
