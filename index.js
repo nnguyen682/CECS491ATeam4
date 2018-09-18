@@ -62,7 +62,7 @@ const https = require("https");
 exports.handler = function(event, context, callback) {
     let alexa = Alexa.handler(event, context);
     alexa.appId = APP_ID; // 
-
+    alexa.dynamoDBTableName = 'goodVibesTable';
     alexa.resources = languageStrings;
  // alexa.dynamoDBTableName = "myTable"; // persistent session attributes
     alexa.registerHandlers(handlers);
@@ -134,7 +134,7 @@ const handlers = {
         {
           let say = 'Here is a reminder of what you got from the test.';
           say += this.attributes.Result;
-          say += ' Goodbye.';
+          say += ' Take it easy and have a nice day.';
         this.response
           .speak(say);
         this.emit(':responseReady'); 
@@ -244,11 +244,31 @@ const handlers = {
     },
     'LaunchRequest': function () {
         let say = this.t('WELCOME1') + ' ' + this.t('HELP');
+        if(!this.attributes['userName']){
+            say += "I see it's your first time here. Please tell me your name";
+            this.response
+          .speak(say)
+          .listen('try again, ' + say);
+        this.emit(':responseReady'); 
+        }
+        else{
+          let sayWelcome = "Wellcome back " + this.attributes['userName'] + '! ' +this.t('HELP');
+          this.response
+          .speak(sayWelcome)
+          .listen('try again, ' + say);
+        this.emit(':responseReady'); 
+        }
+        
+    },
+    'UserNames': function () {
+      this.attributes['userName'] = this.event.request.intent.slots.Name.value;
+        let say = "Hello " + this.event.request.intent.slots.Name.value;
         this.response
           .speak(say)
           .listen('try again, ' + say);
-
+        // Create speech output
         this.emit(':responseReady'); 
+
     },
     'AMAZON.YesIntent': function() {
         var speechOutput;
@@ -276,7 +296,7 @@ const handlers = {
           this.emit(':responseReady');
         }
         else {
-          speechOutput = "Yes what? I didn't ask you anything";
+          speechOutput = "Yes what? <say-as interpret-as='interjection'>tsk tsk</say-as> I didn't ask you anything";
           this.response.speak(speechOutput).shouldEndSession(false);
           this.emit(':responseReady');
         }
@@ -322,8 +342,9 @@ const handlers = {
               this.attributes.skillState = null;
               result = 'Minimal depression.';
               speechOutput = 'Based on the test results, you fall under the category of ' + result;
-              speechOutput += ' You are in pretty good shape.'
               this.attributes.Result = speechOutput;
+              speechOutput += ' You are in pretty good shape.'
+              
               this.response.speak(speechOutput).shouldEndSession(false);
               this.emit(':responseReady');
             }
@@ -332,8 +353,9 @@ const handlers = {
               this.attributes.skillState = null;
               result = 'Moderate depression.';
               speechOutput = 'Based on the test results, you fall under the category of ' + result;
-              speechOutput += ' Here is some advice that might help you. '+randomAD;
               this.attributes.Result = speechOutput;
+              speechOutput += ' Here is some advice that might help you. '+randomAD;
+              
               this.response.speak(speechOutput).shouldEndSession(false);
               this.emit(':responseReady');
               
@@ -342,9 +364,9 @@ const handlers = {
             {
               this.attributes.skillState = null;
               result = 'Severe depression.';
-              speechOutput = 'Based on the test results, you fall under the category of ' + result;
-              speechOutput += ' Here is some advice that might help you. '+randomAD;
+              speechOutput = '<say-as interpret-as="interjection">dun dun dun!</say-as> Based on the test results, you fall under the category of ' + result;
               this.attributes.Result = speechOutput;
+              speechOutput += ' Here is some advice that might help you. '+randomAD;
               this.response.speak(speechOutput).shouldEndSession(false);
               this.emit(':responseReady');
               
@@ -390,7 +412,7 @@ const handlers = {
           this.emit(':responseReady');
         }
         else {
-          speechOutput = "No what? I didn't ask you anything";
+          speechOutput = "No what? <say-as interpret-as='interjection'>oh brother</say-as> I didn't ask you anything";
           this.response.speak(speechOutput).shouldEndSession(false);
           this.emit(':responseReady');
         }
