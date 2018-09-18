@@ -64,7 +64,7 @@ exports.handler = function(event, context, callback) {
     alexa.appId = APP_ID; // 
     alexa.dynamoDBTableName = 'goodVibesTable';
     alexa.resources = languageStrings;
-    alexa.dynamoDBTableName = "goodVibeTable"; // persistent session attributes
+    //alexa.dynamoDBTableName = "goodVibeTable"; // persistent session attributes
     alexa.registerHandlers(handlers);
     alexa.execute();
 }
