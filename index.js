@@ -351,7 +351,7 @@ const handlers = {
            const adIndex = Math.floor(Math.random() * adArr.length);
            const randomAD = adArr[adIndex];
            this.attributes['Score'] = this.attributes.quizScore;
-            if(this.attributes.quizScore<=3)
+            if(this.attributes.quizScore<=4)
             {
               this.attributes.skillState = null;
               result = 'Minimal depression.';
@@ -362,10 +362,34 @@ const handlers = {
               this.response.speak(speechOutput).shouldEndSession(false);
               this.emit(':responseReady');
             }
-            else if(this.attributes.quizScore <=6)
+            else if(this.attributes.quizScore <=9)
+            {
+              this.attributes.skillState = null;
+              result = 'Mild depression.';
+              speechOutput = 'Based on the test results, you fall under the category of ' + result;
+              this.attributes.Result = speechOutput;
+              speechOutput += ' Here is some advice that might help you. '+randomAD;
+              
+              this.response.speak(speechOutput).shouldEndSession(false);
+              this.emit(':responseReady');
+              
+            }
+            else if(this.attributes.quizScore <=14)
             {
               this.attributes.skillState = null;
               result = 'Moderate depression.';
+              speechOutput = 'Based on the test results, you fall under the category of ' + result;
+              this.attributes.Result = speechOutput;
+              speechOutput += ' Here is some advice that might help you. '+randomAD;
+              
+              this.response.speak(speechOutput).shouldEndSession(false);
+              this.emit(':responseReady');
+              
+            }
+            else if(this.attributes.quizScore <=19)
+            {
+              this.attributes.skillState = null;
+              result = 'Moderately severe depression.';
               speechOutput = 'Based on the test results, you fall under the category of ' + result;
               this.attributes.Result = speechOutput;
               speechOutput += ' Here is some advice that might help you. '+randomAD;
