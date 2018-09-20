@@ -64,7 +64,7 @@ exports.handler = function(event, context, callback) {
     alexa.appId = APP_ID; // 
     alexa.dynamoDBTableName = 'goodVibesTable';
     alexa.resources = languageStrings;
-    //alexa.dynamoDBTableName = "goodVibeTable"; // persistent session attributes
+ // alexa.dynamoDBTableName = "myTable"; // persistent session attributes
     alexa.registerHandlers(handlers);
     alexa.execute();
 }
@@ -96,7 +96,7 @@ const handlers = {
         }
         else if (this.attributes.skillState == 'discuss')
         {
-            this.attributes.skillState = null;
+          this.attributes.skillState = null;
           speechOutput = 'I asked how are you feeling today. Maybe you should take a rest. What would you like to do next?';
           this.response.speak(speechOutput).shouldEndSession(false);
           this.emit(':responseReady');
@@ -210,7 +210,14 @@ const handlers = {
         var reprompt;
         
         //Initiation of game
-
+        if(this.attributes['Score'] != null)
+       {
+          speechOutput = 'You took the quiz previously, and your score was '+ this.attributes['Score'] + '. Do you want to take this test again?';
+                this.attributes.skillState = 'quizMainMenu';
+                this.response.speak(speechOutput); //Keeps session open without pinging user..
+                this.response.shouldEndSession(false);
+                this.emit(':responseReady');
+       }
         if (this.attributes.skillState == null) { 
                 resetAttributes.call(this);
                 speechOutput = 'I will ask you three questions based on your experiences within the past two weeks. To answer these questions, please say zero for not at all. One for several days. Two for more than half the days. And three for nearly every day. Are you ready to begin?';
@@ -337,6 +344,7 @@ const handlers = {
            const adArr = this.t('ADVICES');
            const adIndex = Math.floor(Math.random() * adArr.length);
            const randomAD = adArr[adIndex];
+           this.attributes['Score'] = this.attributes.quizScore;
             if(this.attributes.quizScore<=3)
             {
               this.attributes.skillState = null;
@@ -344,7 +352,7 @@ const handlers = {
               speechOutput = 'Based on the test results, you fall under the category of ' + result;
               this.attributes.Result = speechOutput;
               speechOutput += ' You are in pretty good shape.'
-              
+               
               this.response.speak(speechOutput).shouldEndSession(false);
               this.emit(':responseReady');
             }
