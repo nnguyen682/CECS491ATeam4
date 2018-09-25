@@ -248,6 +248,7 @@ const handlers = {
     'LaunchRequest': function () {
         let say = this.t('WELCOME1') + ' ' + this.t('HELP');
         if (!this.attributes['userName']) {
+            this.attributes.skillState = 'nameiss';
             say += "I see it's your first time here. Please tell me your name";
             this.response
                 .speak(say)
@@ -260,17 +261,40 @@ const handlers = {
                 .speak(sayWelcome)
                 .listen('try again, ' + say);
             this.emit(':responseReady');
+            this.attributes.skillState = null;
         }
 
     },
     'UserNames': function () {
-        this.attributes['userName'] = this.event.request.intent.slots.Name.value;
-        let say = "Hello " + this.event.request.intent.slots.Name.value;
-        this.response
-            .speak(say)
-            .listen('try again, ' + say);
-        // Create speech output
-        this.emit(':responseReady');
+        if (this.attributes.skillState == 'nameiss') {
+            this.attributes['userName'] = this.event.request.intent.slots.Name.value;
+            let say = "Hello " + this.event.request.intent.slots.Name.value;
+            this.response
+                .speak(say)
+                .listen('try again, ' + say);
+            // Create speech output
+            this.emit(':responseReady');
+            this.attributes.skillState = null;
+        }
+        else if (this.attributes.skillState == null && this.event.request.intent.slots.nameIs.value != null) {
+            let say = "are you sure you wanna change your name from " + this.attributes['userName'] + " to " + this.event.request.intent.slots.Name.value + "?";
+            this.attributes.changeName = this.event.request.intent.slots.Name.value;
+            this.attributes.skillState = "yesNoName";
+            this.response
+                .speak(say)
+                .listen('try again, ' + say);
+            // Create speech output
+            this.emit(':responseReady');
+
+        }
+        else {
+            let say = "We are not sure what you mean by that?";
+            this.response
+                .speak(say)
+                .listen('try again, ' + say);
+            // Create speech output
+            this.emit(':responseReady');
+        }
 
     },
     'AMAZON.YesIntent': function () {
@@ -284,6 +308,16 @@ const handlers = {
             this.attributes.skillState = 'Numbers';
             this.response.speak(speechOutput).shouldEndSession(false);
             this.emit(':responseReady');
+        }
+        else if (this.attributes.skillState == "yesNoName") {
+            let say = "Your name is changed to " + this.attributes.changeName;
+            this.attributes['userName'] = this.attributes.changeName;
+            this.response
+                .speak(say)
+                .listen('try again, ' + say);
+            // Create speech output
+            this.emit(':responseReady');
+            this.attributes.skillState = null;
         }
         else if (this.attributes.skillState == 'Numbers') {
             speechOutput = 'You are in the middle of a test, Please choose a number from 0 to 3 ';
@@ -417,6 +451,15 @@ const handlers = {
             speechOutput = 'You are in the middle of a quiz, Please choose a number from 0 to 3 ';
             this.response.speak(speechOutput);
             this.attributes.lastOutputResponse = speechOutput;
+        }
+        else if (this.attributes.skillState == "yesNoName") {
+            let say = "Your name stays the same, which is" + this.attributes['userName'];
+            this.response
+                .speak(say)
+                .listen('try again, ' + say);
+            // Create speech output
+            this.emit(':responseReady');
+            this.attributes.skillState = null;
         }
         else if (this.attributes.skillState == 'quizMainMenu') {
             speechOutput = 'Come back next time when you are ready';
