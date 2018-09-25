@@ -146,6 +146,37 @@
                     "samples": [
                         "{number}"
                     ]
+                },
+                {
+                    "name": "UserNames",
+                    "slots": [
+                        {
+                            "name": "Name",
+                            "type": "AMAZON.US_FIRST_NAME"
+                        },
+                        {
+                            "name": "nameIs",
+                            "type": "NameIs"
+                        }
+                    ],
+                    "samples": [
+                        "{nameIs} {Name} {Name}",
+                        "{nameIs} {Name}"
+                    ]
+                },
+                {
+                    "name": "Sad",
+                    "slots": [
+                        {
+                            "name": "SadStory",
+                            "type": "sadstory"
+                        }
+                    ],
+                    "samples": [
+                        "listen to {SadStory}",
+                        "open {SadStory}",
+                        "{SadStory}"
+                    ]
                 }
             ],
             "types": [
@@ -156,6 +187,7 @@
                             "name": {
                                 "value": "discuss",
                                 "synonyms": [
+                                    "talk",
                                     "explain",
                                     "express",
                                     "talk about"
@@ -347,6 +379,50 @@
                             }
                         }
                     ]
+                },
+                {
+                    "name": "NameIs",
+                    "values": [
+                        {
+                            "name": {
+                                "value": "This is "
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "I am"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "call me"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "You can call me"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "My name is"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "sadstory",
+                    "values": [
+                        {
+                            "name": {
+                                "value": "SadStory",
+                                "synonyms": [
+                                    "sad story",
+                                    "story"
+                                ]
+                            }
+                        }
+                    ]
                 }
             ]
         },
@@ -379,6 +455,41 @@
                             "prompts": {
                                 "elicitation": "Elicit.Slot.1199070203868.572483163178"
                             }
+                        }
+                    ]
+                },
+                {
+                    "name": "UserNames",
+                    "confirmationRequired": false,
+                    "prompts": {},
+                    "slots": [
+                        {
+                            "name": "Name",
+                            "type": "AMAZON.US_FIRST_NAME",
+                            "confirmationRequired": false,
+                            "elicitationRequired": false,
+                            "prompts": {}
+                        },
+                        {
+                            "name": "nameIs",
+                            "type": "NameIs",
+                            "confirmationRequired": false,
+                            "elicitationRequired": false,
+                            "prompts": {}
+                        }
+                    ]
+                },
+                {
+                    "name": "Sad",
+                    "confirmationRequired": false,
+                    "prompts": {},
+                    "slots": [
+                        {
+                            "name": "SadStory",
+                            "type": "sadstory",
+                            "confirmationRequired": false,
+                            "elicitationRequired": false,
+                            "prompts": {}
                         }
                     ]
                 }
