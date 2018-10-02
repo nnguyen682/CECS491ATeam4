@@ -167,7 +167,7 @@ const handlers = {
             if (slotValues.feeling.resolved == "Good") {
                 this.attributes.skillState = null;
                 this.emit(':ask', this.t('Glad to hear that, keep up the good work'));
-                this.attributes['prevDay'] = slotValues.feeling.resolved;
+                this.attributes['prevDay'] = 'Good';
             }
             else if (slotValues.feeling.resolved == "Bad") {
                 this.attributes.skillState = null;
@@ -175,7 +175,7 @@ const handlers = {
                 const adIndex = Math.floor(Math.random() * adArr.length);
                 const randomAD = adArr[adIndex];
                 this.emit(':ask', randomAD);
-                this.attributes['prevDay'] = slotValues.feeling.resolved;
+                this.attributes['prevDay'] = 'Bad';
             }
             else {
                 this.attributes.skillState = null;
