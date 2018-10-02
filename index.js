@@ -160,13 +160,14 @@ const handlers = {
             this.attributes.skillState = 'discuss'
             // delegate to Alexa to collect all the required slots 
             let filledSlots = delegateSlotCollection.call(this);
-            if (!filledSlots) {
+            if (!filledSlots){
                 return;
             }
             let slotValues = getSlotValues(filledSlots);
             if (slotValues.feeling.resolved == "Good") {
                 this.attributes.skillState = null;
                 this.emit(':ask', this.t('Glad to hear that, keep up the good work'));
+                this.attributes['prevDay'] = slotValues.feeling.resolved;
             }
             else if (slotValues.feeling.resolved == "Bad") {
                 this.attributes.skillState = null;
@@ -174,6 +175,7 @@ const handlers = {
                 const adIndex = Math.floor(Math.random() * adArr.length);
                 const randomAD = adArr[adIndex];
                 this.emit(':ask', randomAD);
+                this.attributes['prevDay'] = slotValues.feeling.resolved;
             }
             else {
                 this.attributes.skillState = null;
@@ -257,6 +259,13 @@ const handlers = {
         }
         else {
             let sayWelcome = "Wellcome back " + this.attributes['userName'] + '! ' + this.t('HELP');
+            if(this.attributes['prevDay'] == 'Good'){
+                sayWelcome += "You mentioned last time that you were having a good day. I hope things are still looking up for you.";
+            }
+            else if(this.attributes['prevDay'] == 'Bad'){
+                sayWelcome += "Last time you mentioned that you were having a bad day. Have things gotten any better since then?";
+                this.attributes.skillState = 'anyBetter';
+            }
             this.response
                 .speak(sayWelcome)
                 .listen('try again, ' + say);
@@ -327,6 +336,13 @@ const handlers = {
         else if (this.attributes.skillState == 'discuss') {
             this.attributes.skillState = null;
             speechOutput = 'I asked how are you feeling today. Maybe you should take a rest. What would you like to do next?';
+            this.response.speak(speechOutput).shouldEndSession(false);
+            this.emit(':responseReady');
+        }
+        else if (this.attributes.skillState == 'anyBetter'){
+            this.attributes.skillState = null;
+            this.attributes['prevDay'] = 'Good';
+            speechOutput = 'That is great news '+this.attributes['userName']+'! Keep it up, I am proud of you.';
             this.response.speak(speechOutput).shouldEndSession(false);
             this.emit(':responseReady');
         }
@@ -470,6 +486,13 @@ const handlers = {
         else if (this.attributes.skillState == 'discuss') {
             this.attributes.skillState = null;
             speechOutput = 'I asked how are you feeling today. Maybe you should take a rest. What would you like to do next?';
+            this.response.speak(speechOutput).shouldEndSession(false);
+            this.emit(':responseReady');
+        }
+        else if (this.attributes.skillState == 'anyBetter'){
+            this.attributes.skillState = null;
+            this.attributes['prevDay'] = 'Bad';
+            speechOutput = 'I am sorry to hear that '+this.attributes['userName']+'. I am here for you and I am not going anywhere.';
             this.response.speak(speechOutput).shouldEndSession(false);
             this.emit(':responseReady');
         }
