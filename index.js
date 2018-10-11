@@ -160,22 +160,24 @@ const handlers = {
             this.attributes.skillState = 'discuss'
             // delegate to Alexa to collect all the required slots 
             let filledSlots = delegateSlotCollection.call(this);
-            if (!filledSlots){
+            if (!filledSlots) {
                 return;
             }
             let slotValues = getSlotValues(filledSlots);
             if (slotValues.feeling.resolved == "Good") {
                 this.attributes.skillState = null;
-                this.emit(':ask', this.t('Glad to hear that, keep up the good work'));
                 this.attributes['prevDay'] = 'Good';
+                this.emit(':ask', this.t('Glad to hear that, keep up the good work'));
+
             }
             else if (slotValues.feeling.resolved == "Bad") {
                 this.attributes.skillState = null;
                 const adArr = this.t('IFTHISISBAD');
                 const adIndex = Math.floor(Math.random() * adArr.length);
                 const randomAD = adArr[adIndex];
-                this.emit(':ask', randomAD);
                 this.attributes['prevDay'] = 'Bad';
+                this.emit(':ask', randomAD);
+
             }
             else {
                 this.attributes.skillState = null;
@@ -259,10 +261,11 @@ const handlers = {
         }
         else {
             let sayWelcome = "Wellcome back " + this.attributes['userName'] + '! ' + this.t('HELP');
-            if(this.attributes['prevDay'] == 'Good'){
+            if (this.attributes['prevDay'] == 'Good') {
                 sayWelcome += "You mentioned last time that you were having a good day. I hope things are still looking up for you.";
+                this.attributes.skillState = null;
             }
-            else if(this.attributes['prevDay'] == 'Bad'){
+            else if (this.attributes['prevDay'] == 'Bad') {
                 sayWelcome += "Last time you mentioned that you were having a bad day. Have things gotten any better since then?";
                 this.attributes.skillState = 'anyBetter';
             }
@@ -270,7 +273,7 @@ const handlers = {
                 .speak(sayWelcome)
                 .listen('try again, ' + say);
             this.emit(':responseReady');
-            this.attributes.skillState = null;
+
         }
 
     },
@@ -339,10 +342,10 @@ const handlers = {
             this.response.speak(speechOutput).shouldEndSession(false);
             this.emit(':responseReady');
         }
-        else if (this.attributes.skillState == 'anyBetter'){
+        else if (this.attributes.skillState == 'anyBetter') {
             this.attributes.skillState = null;
             this.attributes['prevDay'] = 'Good';
-            speechOutput = 'That is great news '+this.attributes['userName']+'! Keep it up, I am proud of you.';
+            speechOutput = 'That is great news ' + this.attributes['userName'] + '! Keep it up, I am proud of you.';
             this.response.speak(speechOutput).shouldEndSession(false);
             this.emit(':responseReady');
         }
@@ -351,6 +354,16 @@ const handlers = {
             this.response.speak(speechOutput).shouldEndSession(false);
             this.emit(':responseReady');
         }
+    },
+
+    'newstory': function () {
+        var speechOutput;
+        speechOutput = 'This is from story';
+        if (this.event.request.intent.slots.type.value != null) {
+            speechOutput = 'The story have type: ' + this.event.request.intent.slots.type.value;
+        }
+        this.response.speak(speechOutput).shouldEndSession(false);
+        this.emit(':responseReady');
     },
     'Numbers': function () {
         var speechOutput;
@@ -469,13 +482,14 @@ const handlers = {
             this.attributes.lastOutputResponse = speechOutput;
         }
         else if (this.attributes.skillState == "yesNoName") {
-            let say = "Your name stays the same, which is" + this.attributes['userName'];
+            let say = "Your name stays the same, which is: " + this.attributes['userName'];
+            this.attributes.skillState = null;
             this.response
                 .speak(say)
                 .listen('try again, ' + say);
             // Create speech output
             this.emit(':responseReady');
-            this.attributes.skillState = null;
+
         }
         else if (this.attributes.skillState == 'quizMainMenu') {
             speechOutput = 'Come back next time when you are ready';
@@ -489,10 +503,10 @@ const handlers = {
             this.response.speak(speechOutput).shouldEndSession(false);
             this.emit(':responseReady');
         }
-        else if (this.attributes.skillState == 'anyBetter'){
+        else if (this.attributes.skillState == 'anyBetter') {
             this.attributes.skillState = null;
             this.attributes['prevDay'] = 'Bad';
-            speechOutput = 'I am sorry to hear that '+this.attributes['userName']+'. I am here for you and I am not going anywhere.';
+            speechOutput = 'I am sorry to hear that ' + this.attributes['userName'] + '. I am here for you and I am not going anywhere.';
             this.response.speak(speechOutput).shouldEndSession(false);
             this.emit(':responseReady');
         }
@@ -697,6 +711,7 @@ function resetAttributes() {
 function getRandom(min, max) {
     return Math.floor((Math.random() * ((max - min) + 1)) + min);
 }
+
 // If the user said a synonym that maps to more than one value, we need to ask 
 // the user for clarification. Disambiguate slot will loop through all slots and 
 // elicit confirmation for the first slot it sees that resolves to more than 
