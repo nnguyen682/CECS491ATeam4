@@ -8,8 +8,6 @@ const languageStrings = {
             ADVICES: [
                 'Sometimes the most productive thing you can do is relax. ',
                 'The time to relax is when you do not have time for it. ',
-                'If you ar having trouble sleeping, try putting some lavender oil on yor feet',
-                'Take a quick break from your busy life and try meditating for a few minutes',
                 'The mind should be allowed some relaxation, that it may return to its work all the better for the rest. ',
                 "Relaxation means releasing all concern and tension and letting the natural order of life flow through one's being. ",
                 'Your mind will answer most questions if you learn to relax and wait for the answer. ',
@@ -69,7 +67,7 @@ const https = require("https");
 
 exports.handler = function (event, context, callback) {
     let alexa = Alexa.handler(event, context);
-    alexa.appId = APP_ID; //
+    alexa.appId = APP_ID; // 
     alexa.dynamoDBTableName = 'goodVibesTable';
     alexa.resources = languageStrings;
     // alexa.dynamoDBTableName = "myTable"; // persistent session attributes
@@ -160,7 +158,7 @@ const handlers = {
         }
         else {
             this.attributes.skillState = 'discuss'
-            // delegate to Alexa to collect all the required slots
+            // delegate to Alexa to collect all the required slots 
             let filledSlots = delegateSlotCollection.call(this);
             if (!filledSlots) {
                 return;
@@ -593,18 +591,18 @@ const welcomeCardImg = {
 };
 
 
-// ***********************************
-// ** Helper functions from
-// ** These should not need to be edited
-// ** www.github.com/alexa/alexa-cookbook
-// ***********************************
+// *********************************** 
+// ** Helper functions from 
+// ** These should not need to be edited 
+// ** www.github.com/alexa/alexa-cookbook 
+// *********************************** 
 
-// ***********************************
-// ** Route to Intent
-// ***********************************
+// *********************************** 
+// ** Route to Intent 
+// *********************************** 
 
-// after doing the logic in new session,
-// route to the proper intent
+// after doing the logic in new session, 
+// route to the proper intent 
 
 function routeToIntent() {
 
@@ -620,21 +618,21 @@ function routeToIntent() {
     }
 }
 
-// ***********************************
-// ** Dialog Management
-// ***********************************
+// *********************************** 
+// ** Dialog Management 
+// *********************************** 
 function getSlotValues(filledSlots) {
-    //given event.request.intent.slots, a slots values object so you have
-    //what synonym the person said - .synonym
-    //what that resolved to - .resolved
-    //and if it's a word that is in your slot values - .isValidated
+    //given event.request.intent.slots, a slots values object so you have 
+    //what synonym the person said - .synonym 
+    //what that resolved to - .resolved 
+    //and if it's a word that is in your slot values - .isValidated 
     let slotValues = {};
 
     console.log('The filled slots: ' + JSON.stringify(filledSlots));
     Object.keys(filledSlots).forEach(function (item) {
-        //console.log("item in filledSlots: "+JSON.stringify(filledSlots[item]));
+        //console.log("item in filledSlots: "+JSON.stringify(filledSlots[item])); 
         var name = filledSlots[item].name;
-        //console.log("name: "+name);
+        //console.log("name: "+name); 
         if (filledSlots[item] &&
             filledSlots[item].resolutions &&
             filledSlots[item].resolutions.resolutionsPerAuthority[0] &&
@@ -665,12 +663,12 @@ function getSlotValues(filledSlots) {
             };
         }
     }, this);
-    //console.log("slot values: "+JSON.stringify(slotValues));
+    //console.log("slot values: "+JSON.stringify(slotValues)); 
     return slotValues;
 }
-// This function delegates multi-turn dialogs to Alexa.
-// For more information about dialog directives see the link below.
-// https://developer.amazon.com/docs/custom-skills/dialog-interface-reference.html
+// This function delegates multi-turn dialogs to Alexa. 
+// For more information about dialog directives see the link below. 
+// https://developer.amazon.com/docs/custom-skills/dialog-interface-reference.html 
 function delegateSlotCollection() {
     console.log("in delegateSlotCollection");
     console.log("current dialogState: " + this.event.request.dialogState);
@@ -679,24 +677,24 @@ function delegateSlotCollection() {
         console.log("in STARTED");
         console.log(JSON.stringify(this.event));
         var updatedIntent = this.event.request.intent;
-        // optionally pre-fill slots: update the intent object with slot values
-        // for which you have defaults, then return Dialog.Delegate with this
-        // updated intent in the updatedIntent property
+        // optionally pre-fill slots: update the intent object with slot values 
+        // for which you have defaults, then return Dialog.Delegate with this 
+        // updated intent in the updatedIntent property 
 
         disambiguateSlot.call(this);
         console.log("disambiguated: " + JSON.stringify(this.event));
         this.emit(":delegate", updatedIntent);
     } else if (this.event.request.dialogState !== "COMPLETED") {
         console.log("in not completed");
-        //console.log(JSON.stringify(this.event));
+        //console.log(JSON.stringify(this.event)); 
 
         disambiguateSlot.call(this);
         this.emit(":delegate", updatedIntent);
     } else {
         console.log("in completed");
-        //console.log("returning: "+ JSON.stringify(this.event.request.intent));
-        // Dialog is now complete and all required slots should be filled,
-        // so call your normal intent handler.
+        //console.log("returning: "+ JSON.stringify(this.event.request.intent)); 
+        // Dialog is now complete and all required slots should be filled, 
+        // so call your normal intent handler. 
         return this.event.request.intent.slots;
     }
     return null;
@@ -714,10 +712,10 @@ function getRandom(min, max) {
     return Math.floor((Math.random() * ((max - min) + 1)) + min);
 }
 
-// If the user said a synonym that maps to more than one value, we need to ask
-// the user for clarification. Disambiguate slot will loop through all slots and
-// elicit confirmation for the first slot it sees that resolves to more than
-// one value.
+// If the user said a synonym that maps to more than one value, we need to ask 
+// the user for clarification. Disambiguate slot will loop through all slots and 
+// elicit confirmation for the first slot it sees that resolves to more than 
+// one value. 
 function disambiguateSlot() {
     let currentIntent = this.event.request.intent;
 
@@ -729,12 +727,12 @@ function disambiguateSlot() {
             currentSlot.resolutions.resolutionsPerAuthority[0]) {
 
             if (currentSlot.resolutions.resolutionsPerAuthority[0].status.code == 'ER_SUCCESS_MATCH') {
-                // if there's more than one value that means we have a synonym that
-                // mapped to more than one value. So we need to ask the user for
-                // clarification. For example if the user said "mini dog", and
-                // "mini" is a synonym for both "small" and "tiny" then ask "Did you
-                // want a small or tiny dog?" to get the user to tell you
-                // specifically what type mini dog (small mini or tiny mini).
+                // if there's more than one value that means we have a synonym that 
+                // mapped to more than one value. So we need to ask the user for 
+                // clarification. For example if the user said "mini dog", and 
+                // "mini" is a synonym for both "small" and "tiny" then ask "Did you 
+                // want a small or tiny dog?" to get the user to tell you 
+                // specifically what type mini dog (small mini or tiny mini). 
                 if (currentSlot.resolutions.resolutionsPerAuthority[0].values.length > 1) {
                     let prompt = 'Which would you like';
                     let size = currentSlot.resolutions.resolutionsPerAuthority[0].values.length;
@@ -744,14 +742,14 @@ function disambiguateSlot() {
 
                     prompt += '?';
                     let reprompt = prompt;
-                    // In this case we need to disambiguate the value that they
-                    // provided to us because it resolved to more than one thing so
-                    // we build up our prompts and then emit elicitSlot.
+                    // In this case we need to disambiguate the value that they 
+                    // provided to us because it resolved to more than one thing so 
+                    // we build up our prompts and then emit elicitSlot. 
                     this.emit(':elicitSlot', currentSlot.name, prompt, reprompt);
                 }
             } else if (currentSlot.resolutions.resolutionsPerAuthority[0].status.code == 'ER_SUCCESS_NO_MATCH') {
-                // Here is where you'll want to add instrumentation to your code
-                // so you can capture synonyms that you haven't defined.
+                // Here is where you'll want to add instrumentation to your code 
+                // so you can capture synonyms that you haven't defined. 
                 console.log("NO MATCH FOR: ", currentSlot.name, " value: ", currentSlot.value);
 
                 if (REQUIRED_SLOTS.indexOf(currentSlot.name) > -1) {
@@ -763,23 +761,23 @@ function disambiguateSlot() {
     }, this);
 }
 
-// Given the request an slot name, slotHasValue returns the slot value if one
-// was given for `slotName`. Otherwise returns false.
+// Given the request an slot name, slotHasValue returns the slot value if one 
+// was given for `slotName`. Otherwise returns false. 
 function slotHasValue(request, slotName) {
 
     let slot = request.intent.slots[slotName];
 
-    //uncomment if you want to see the request
-    //console.log("request = "+JSON.stringify(request));
+    //uncomment if you want to see the request 
+    //console.log("request = "+JSON.stringify(request)); 
     let slotValue;
 
-    //if we have a slot, get the text and store it into speechOutput
+    //if we have a slot, get the text and store it into speechOutput 
     if (slot && slot.value) {
-        //we have a value in the slot
+        //we have a value in the slot 
         slotValue = slot.value.toLowerCase();
         return slotValue;
     } else {
-        //we didn't get a value in the slot.
+        //we didn't get a value in the slot. 
         return false;
     }
 }
