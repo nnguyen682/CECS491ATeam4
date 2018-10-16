@@ -43,6 +43,12 @@ const languageStrings = {
                 "How often did you move or speak slower or quicker than usual such that other people noticed?",
                 "How ofthen did you have thoughts that you would be better off dead, or of hurting yourself?",
             ],
+            STORY: [
+                "This is a personal story from Nhan. I lost my wallet.",
+                "This is a personal story from Anthony. Nhan said I am annoying.",
+                "This is a personal story from Juan. I don't have a sad story",
+            ],
+
             IFTHISISBAD: [
                 "Be kind to yourself",
                 "Keep your head up, Things will get brighter",
@@ -162,6 +168,9 @@ const handlers = {
             this.attributes.skillState = 'discuss'
             // delegate to Alexa to collect all the required slots
             let filledSlots = delegateSlotCollection.call(this);
+
+
+
             if (!filledSlots) {
                 return;
             }
@@ -359,10 +368,48 @@ const handlers = {
     },
 
     'newstory': function () {
+
+        //this.attributes['story'] = null;
+        if (!this.attributes['story']) {
+            const extreArr = this.t('STORY');
+            this.attributes['story'] = extreArr;
+            var newStory = [];
+            var i = 0;
+            for (i = 0; i < extreArr.length; i++) {
+                newStory[i] = true;
+            }
+            this.attributes['newType'] = newStory;
+        }
+        var theStory = this.attributes['story'];
+        var indexStory = this.attributes['newType'];
         var speechOutput;
-        speechOutput = 'This is from story';
-        if (this.event.request.intent.slots.type.value != null) {
-            speechOutput = 'The story have type: ' + this.event.request.intent.slots.type.value;
+        speechOutput = 'This is from default story. ';
+        if (this.event.request.intent.slots.type.value == null) {
+            var randomIndex = randomIndexOfArray(theStory);
+            speechOutput += theStory[randomIndex];
+            indexStory[randomIndex] = false;
+            this.attributes['newType'] = indexStory;
+        }
+        else if (this.event.request.intent.slots.type.value != null) {
+            let filledSlots = delegateSlotCollection.call(this);
+            let slotValues = getSlotValues(filledSlots)
+            slotValues.type.resolved == "Good"
+            speechOutput = 'The story have type: ' + slotValues.type.resolved + ". ";
+            if (slotValues.type.resolved == "new") {
+                var i = 0;
+                while (indexStory[i] == false && i < theStory.length) {
+                    i++;
+                }
+                if (i == theStory.length) {
+                    speechOutput += "There is no new story left";
+                }
+                else if (i < theStory.length) {
+                    speechOutput += theStory[i];
+                    indexStory[i] = false;
+                    this.attributes['newType'] = indexStory;
+                }
+            }
+
         }
         this.response.speak(speechOutput).shouldEndSession(false);
         this.emit(':responseReady');
@@ -531,6 +578,10 @@ const handlers = {
 
 function randomPhrase(myArray) {
     return (myArray[Math.floor(Math.random() * myArray.length)]);
+}
+
+function randomIndexOfArray(myArray) {
+    return Math.floor(Math.random() * myArray.length);
 }
 
 // returns slot resolved to an expected value if possible
