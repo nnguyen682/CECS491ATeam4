@@ -68,6 +68,15 @@ const languageStrings = {
                 "I'm sorry to hear that.",
                 "That's unfortunate, I'm sure things will get better.",
             ],
+            OPENASK: [
+                "What did you do today?",
+                "What happened today?",
+            ],
+            RESTRICTEDASK: [
+                "Did you do anything today?",
+                "Did you do anything interesting today?",
+                "Did you do anything fun today?",
+            ],
             IFTHISISBAD: [
                 "Be kind to yourself",
                 "Keep your head up, Things will get brighter",
