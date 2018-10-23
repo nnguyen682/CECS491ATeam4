@@ -5,10 +5,68 @@ const invocationName = "good vibes";
 const languageStrings = {
     'en': {
         'translation': {
+            ADVICES: [
+                'Sometimes the most productive thing you can do is relax. ',
+                'The time to relax is when you do not have time for it. ',
+                'If you ar having trouble sleeping, try putting some lavender oil on yor feet',
+                'Take a quick break from your busy life and try meditating for a few minutes',
+                'The mind should be allowed some relaxation, that it may return to its work all the better for the rest. ',
+                "Relaxation means releasing all concern and tension and letting the natural order of life flow through one's being. ",
+                'Your mind will answer most questions if you learn to relax and wait for the answer. ',
+                "If you are feeling down, try working on a hobby to keep your mind occupied.",
+                "Isolation can be a key factor of depression. Contact a friend or family member and have a conversation with them.",
+                "Overworking and continuous stress can lead to feelings of depression or hopelessness. Try out different strategies for coping with stress to see what works best for you.",
+                "If you notice mood changes during fall or winter, you may have a case of seasonal affective disorder. Do not worry, it is only temporary, but if these mood swings escalate, you may want to seek medical help.",
+                'Make sure you floss your teeth today! Its more important than you think.',
+                'Give someone a hug today.',
+                'Dont sweat the small things.',
+            ],
+            EXTREME: [
+                "Don't do it! I don't want you to die. ",
+                "There are people that love you. ",
+                'There are still people here that need you. ',
+                "Things will get better tomorrow. ",
+                "You are a valuable person, don't think any less of yourself.",
+                "You deserve good health and a positive outlook on life.",
+                "Most, if not all, of the struggles that you are experiencing right now are temporary.",
+                "Your life is too valuable to give up on.",
+                "Don't let your problems get the best of you, there is still so much to live for.",
+            ],
+            QUESTIONS: [
+                "How often did you feel little interest or pleasure in doing things?",
+                "How often did you feel down, depressed or hopeless?",
+                'How often did you have trouble falling or staying asleep, or sleeping too much?',
+                "How often did you feel tired or had little energy?",
+                "How often did you have a poor appetite or experience overeating?",
+                "How often did you feel bad about yourself or feel that you are a failure or feel like you let yourself or others down?",
+                "How often did you struggle to concentrate on things, such as reading a book or watching television?",
+                "How often did you move or speak slower or quicker than usual such that other people noticed?",
+                "How ofthen did you have thoughts that you would be better off dead, or of hurting yourself?",
+            ],
             STORY: [
                 "This is a personal story from Nhan. I lost my wallet.",
+                "This is a personal story from Nhan. I'm single.",
                 "This is a personal story from Anthony. Nhan said I am annoying.",
+                "This is a personal story from Anothony. My parents are homeless and I'm trying to finish college so i can support them.",
                 "This is a personal story from Juan. I don't have a sad story",
+                "This is a personal story from Juan. This is Nhan saying on Juan behalf, He doesn't really have any sad story."
+            ],
+            GOODDISCUSSION: [
+                "That's great to hear!",
+                "I'm glad to hear that.",
+                "That's great news.",
+                "I am very happy to hear that!",
+            ],
+            NEUTRALDISCUSSION: [
+                "That's good to hear.",
+                "That's nice.",
+                "That's good.",
+                "On the bright side, things could be worse.",
+            ],
+            BADDISCUSSION: [
+                "I'm really sorry to hear that.",
+                "I'm sorry to hear that.",
+                "That's unfortunate, I'm sure things will get better.",
             ],
             IFTHISISBAD: [
                 "Be kind to yourself",
@@ -31,9 +89,6 @@ const languageStrings = {
 };
 const APP_ID = undefined;  // TODO replace with your app ID (OPTIONAL).
 
-const advice = require("ad-strings");
-const question = require("questions");
-const extreme = require("extreme");
 const Alexa = require("alexa-sdk");
 const https = require("https");
 
@@ -171,8 +226,7 @@ const handlers = {
         }
         else {
             let say = 'Here is your advice. ';
-
-            const adArr = advice;
+            const adArr = this.t('ADVICES');
             const adIndex = Math.floor(Math.random() * adArr.length);
             const randomAD = adArr[adIndex];
             this.emit(':ask', randomAD);
@@ -217,7 +271,7 @@ const handlers = {
         }
     },
     'EXTREME': function () {
-        const extreArr = extreme;
+        const extreArr = this.t('EXTREME');
         const extreIndex = Math.floor(Math.random() * extreArr.length);
         const randomExtre = extreArr[extreIndex];
 
@@ -300,7 +354,7 @@ const handlers = {
         if (this.attributes.skillState == 'quizMainMenu') {
             this.attributes.quizScore = 0;
             this.attributes.quizNo = 0;
-            const extreArr = question;
+            const extreArr = this.t('QUESTIONS');
             const randomExtre = extreArr[this.attributes.quizNo];
             speechOutput = randomExtre;
             this.attributes.skillState = 'Numbers';
@@ -404,7 +458,7 @@ const handlers = {
                 else if (numberValue == 3)
                     this.attributes.quizScore += 3;
                 this.attributes.quizNo += 1;
-                const extreArr = extreme;
+                const extreArr = this.t('QUESTIONS');
                 const randomExtre = extreArr[this.attributes.quizNo];
                 speechOutput = randomExtre;
                 this.response.speak(speechOutput).shouldEndSession(false);
@@ -422,7 +476,7 @@ const handlers = {
                     this.attributes.quizScore += 2;
                 else if (numberValue == 3)
                     this.attributes.quizScore += 3;
-                const adArr = advice;
+                const adArr = this.t('ADVICES');
                 const adIndex = Math.floor(Math.random() * adArr.length);
                 const randomAD = adArr[adIndex];
                 this.attributes['Score'] = this.attributes.quizScore;
