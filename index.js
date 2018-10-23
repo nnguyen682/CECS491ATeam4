@@ -45,8 +45,11 @@ const languageStrings = {
             ],
             STORY: [
                 "This is a personal story from Nhan. I lost my wallet.",
+                "This is a personal story from Nhan. I'm single.",
                 "This is a personal story from Anthony. Nhan said I am annoying.",
+                "This is a personal story from Anothony. My parents are homeless and I'm trying to finish college so i can support them.",
                 "This is a personal story from Juan. I don't have a sad story",
+                "This is a personal story from Juan. This is Nhan saying on Juan behalf, He doesn't really have any sad story."
             ],
 
             IFTHISISBAD: [
@@ -261,6 +264,7 @@ const handlers = {
 
     },
     'LaunchRequest': function () {
+        //this.attributes['userName']= null;
         let say = this.t('WELCOME1') + ' ' + this.t('HELP');
         if (!this.attributes['userName']) {
             this.attributes.skillState = 'nameiss';
@@ -287,6 +291,15 @@ const handlers = {
 
         }
 
+    },
+    'clearName': function () {
+        this.attributes['story'] = null
+        this.attributes['userName'] = null;
+        let say = "Database of Username and Story Intentions set back to null";
+        this.response
+            .speak(say)
+            .listen('try again, ' + say);
+        this.emit(':responseReady');
     },
     'UserNames': function () {
         if (this.attributes.skillState == 'nameiss') {
