@@ -5,44 +5,12 @@ const invocationName = "good vibes";
 const languageStrings = {
     'en': {
         'translation': {
-            ADVICES: [
-                'Sometimes the most productive thing you can do is relax. ',
-                'The time to relax is when you do not have time for it. ',
-                'If you ar having trouble sleeping, try putting some lavender oil on yor feet',
-                'Take a quick break from your busy life and try meditating for a few minutes',
-                'The mind should be allowed some relaxation, that it may return to its work all the better for the rest. ',
-                "Relaxation means releasing all concern and tension and letting the natural order of life flow through one's being. ",
-                'Your mind will answer most questions if you learn to relax and wait for the answer. ',
-                "If you are feeling down, try working on a hobby to keep your mind occupied.",
-                "Isolation can be a key factor of depression. Contact a friend or family member and have a conversation with them.",
-                "Overworking and continuous stress can lead to feelings of depression or hopelessness. Try out different strategies for coping with stress to see what works best for you.",
-                "If you notice mood changes during fall or winter, you may have a case of seasonal affective disorder. Do not worry, it is only temporary, but if these mood swings escalate, you may want to seek medical help.",
-                'Make sure you floss your teeth today! Its more important than you think.',
-                'Give someone a hug today.',
-                'Dont sweat the small things.',
+            STORY: [
+                "This is a personal story from Nhan. I lost my wallet.",
+                "This is a personal story from Anthony. Nhan said I am annoying.",
+                "This is a personal story from Juan. I don't have a sad story",
             ],
-            EXTREME: [
-                "Don't do it! I don't want you to die. ",
-                "There are people that love you. ",
-                'There are still people here that need you. ',
-                "Things will get better tomorrow. ",
-                "You are a valuable person, don't think any less of yourself.",
-                "You deserve good health and a positive outlook on life.",
-                "Most, if not all, of the struggles that you are experiencing right now are temporary.",
-                "Your life is too valuable to give up on.",
-                "Don't let your problems get the best of you, there is still so much to live for.",
-            ],
-            QUESTIONS: [
-                "How often did you feel little interest or pleasure in doing things?",
-                "How often did you feel down, depressed or hopeless?",
-                'How often did you have trouble falling or staying asleep, or sleeping too much?',
-                "How often did you feel tired or had little energy?",
-                "How often did you have a poor appetite or experience overeating?",
-                "How often did you feel bad about yourself or feel that you are a failure or feel like you let yourself or others down?",
-                "How often did you struggle to concentrate on things, such as reading a book or watching television?",
-                "How often did you move or speak slower or quicker than usual such that other people noticed?",
-                "How ofthen did you have thoughts that you would be better off dead, or of hurting yourself?",
-            ],
+
             IFTHISISBAD: [
                 "Be kind to yourself",
                 "Keep your head up, Things will get brighter",
@@ -64,6 +32,9 @@ const languageStrings = {
 };
 const APP_ID = undefined;  // TODO replace with your app ID (OPTIONAL).
 
+const advice = require("ad-strings");
+const question = require("questions");
+const extreme = require("extreme");
 const Alexa = require("alexa-sdk");
 const https = require("https");
 
@@ -162,6 +133,9 @@ const handlers = {
             this.attributes.skillState = 'discuss'
             // delegate to Alexa to collect all the required slots
             let filledSlots = delegateSlotCollection.call(this);
+
+
+
             if (!filledSlots) {
                 return;
             }
@@ -198,7 +172,8 @@ const handlers = {
         }
         else {
             let say = 'Here is your advice. ';
-            const adArr = this.t('ADVICES');
+
+            const adArr = advice;
             const adIndex = Math.floor(Math.random() * adArr.length);
             const randomAD = adArr[adIndex];
             this.emit(':ask', randomAD);
@@ -243,7 +218,7 @@ const handlers = {
         }
     },
     'EXTREME': function () {
-        const extreArr = this.t('EXTREME');
+        const extreArr = extreme;
         const extreIndex = Math.floor(Math.random() * extreArr.length);
         const randomExtre = extreArr[extreIndex];
 
@@ -316,7 +291,7 @@ const handlers = {
         if (this.attributes.skillState == 'quizMainMenu') {
             this.attributes.quizScore = 0;
             this.attributes.quizNo = 0;
-            const extreArr = this.t('QUESTIONS');
+            const extreArr = question;
             const randomExtre = extreArr[this.attributes.quizNo];
             speechOutput = randomExtre;
             this.attributes.skillState = 'Numbers';
@@ -359,10 +334,48 @@ const handlers = {
     },
 
     'newstory': function () {
+
+        //this.attributes['story'] = null;
+        if (!this.attributes['story']) {
+            const extreArr = this.t('STORY');
+            this.attributes['story'] = extreArr;
+            var newStory = [];
+            var i = 0;
+            for (i = 0; i < extreArr.length; i++) {
+                newStory[i] = true;
+            }
+            this.attributes['newType'] = newStory;
+        }
+        var theStory = this.attributes['story'];
+        var indexStory = this.attributes['newType'];
         var speechOutput;
-        speechOutput = 'This is from story';
-        if (this.event.request.intent.slots.type.value != null) {
-            speechOutput = 'The story have type: ' + this.event.request.intent.slots.type.value;
+        speechOutput = 'This is from default story. ';
+        if (this.event.request.intent.slots.type.value == null) {
+            var randomIndex = randomIndexOfArray(theStory);
+            speechOutput += theStory[randomIndex];
+            indexStory[randomIndex] = false;
+            this.attributes['newType'] = indexStory;
+        }
+        else if (this.event.request.intent.slots.type.value != null) {
+            let filledSlots = delegateSlotCollection.call(this);
+            let slotValues = getSlotValues(filledSlots)
+            slotValues.type.resolved == "Good"
+            speechOutput = 'The story have type: ' + slotValues.type.resolved + ". ";
+            if (slotValues.type.resolved == "new") {
+                var i = 0;
+                while (indexStory[i] == false && i < theStory.length) {
+                    i++;
+                }
+                if (i == theStory.length) {
+                    speechOutput += "There is no new story left";
+                }
+                else if (i < theStory.length) {
+                    speechOutput += theStory[i];
+                    indexStory[i] = false;
+                    this.attributes['newType'] = indexStory;
+                }
+            }
+
         }
         this.response.speak(speechOutput).shouldEndSession(false);
         this.emit(':responseReady');
@@ -382,7 +395,7 @@ const handlers = {
                 else if (numberValue == 3)
                     this.attributes.quizScore += 3;
                 this.attributes.quizNo += 1;
-                const extreArr = this.t('QUESTIONS');
+                const extreArr = extreme;
                 const randomExtre = extreArr[this.attributes.quizNo];
                 speechOutput = randomExtre;
                 this.response.speak(speechOutput).shouldEndSession(false);
@@ -400,7 +413,7 @@ const handlers = {
                     this.attributes.quizScore += 2;
                 else if (numberValue == 3)
                     this.attributes.quizScore += 3;
-                const adArr = this.t('ADVICES');
+                const adArr = advice;
                 const adIndex = Math.floor(Math.random() * adArr.length);
                 const randomAD = adArr[adIndex];
                 this.attributes['Score'] = this.attributes.quizScore;
@@ -531,6 +544,10 @@ const handlers = {
 
 function randomPhrase(myArray) {
     return (myArray[Math.floor(Math.random() * myArray.length)]);
+}
+
+function randomIndexOfArray(myArray) {
+    return Math.floor(Math.random() * myArray.length);
 }
 
 // returns slot resolved to an expected value if possible
