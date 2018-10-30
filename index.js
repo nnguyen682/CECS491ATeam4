@@ -72,6 +72,11 @@ const languageStrings = {
                 "What did you do today?",
                 "What happened today?",
             ],
+            OPENASKCONTINUED: [
+                "What else did you do today?",
+                "What else happened today?",
+                "Did you do anything else today?",
+            ],
             RESTRICTEDASK: [
                 "Did you do anything today?",
                 "Did you do anything interesting today?",
@@ -141,6 +146,11 @@ const handlers = {
             this.response.speak(speechOutput).shouldEndSession(false);
             this.emit(':responseReady');
         }
+        else if (this.attributes.skillState == 'middiscuss') {
+            speechOutput = 'We are in the middle of a discussion. Would you like to end it?';
+            this.response.speak(speechOutput).shouldEndSession(false);
+            this.emit(':responseReady');
+        }
         else {
             let say = this.t('OPTION_MESSAGE');
             this.response
@@ -164,6 +174,12 @@ const handlers = {
             this.attributes.skillState = null;
             this.response.speak(speechOutput);
             this.response.shouldEndSession(false);
+            this.emit(':responseReady');
+        }
+        else if (this.attributes.skillState == 'middiscuss') {
+            this.attributes.skillState = null;
+            speechOutput = 'I enjoy these conversations. I am excited to hear from you again.';
+            this.response.speak(speechOutput).shouldEndSession(false);
             this.emit(':responseReady');
         }
         else {
@@ -193,7 +209,6 @@ const handlers = {
             this.emit(':responseReady');
         }
         else {
-            this.attributes.skillState = 'discuss'
             // delegate to Alexa to collect all the required slots
             let filledSlots = delegateSlotCollection.call(this);
 
@@ -204,18 +219,39 @@ const handlers = {
             }
             let slotValues = getSlotValues(filledSlots);
             if (slotValues.feeling.resolved == "Good") {
-                this.attributes.skillState = null;
+                const adArr1 = this.t('GOODDISCUSSION');
+                if(this.attributes.skillState == 'middiscuss'){
+                    const adArr2 = this.t('OPENASKCONTINUED');
+                }
+                else{
+                    const adArr2 = this.t('OPENASK');
+                }
+                const adIndex1 = Math.floor(Math.random() * adArr1.length);
+                const adIndex2 = Math.floor(Math.random() * adArr2.length);
+                const randomAD1 = adArr1[adIndex1];
+                const randomAD2 = adArr2[adIndex2];
+                this.attributes.skillState = 'middiscuss';
                 this.attributes['prevDay'] = 'Good';
-                this.emit(':ask', this.t('Glad to hear that, keep up the good work'));
-
+                this.emit(':ask', this.t(randomAD1+randomAD2));
             }
             else if (slotValues.feeling.resolved == "Bad") {
-                this.attributes.skillState = null;
+                this.attributes.skillState = 'middiscuss';
                 const adArr = this.t('IFTHISISBAD');
                 const adIndex = Math.floor(Math.random() * adArr.length);
                 const randomAD = adArr[adIndex];
+                const adArr1 = this.t('BADDISCUSSION');
+                if(this.attributes.skillState == 'middiscuss'){
+                    const adArr2 = this.t('OPENASKCONTINUED');
+                }
+                else{
+                    const adArr2 = this.t('OPENASK');
+                }
+                const adIndex1 = Math.floor(Math.random() * adArr1.length);
+                const adIndex2 = Math.floor(Math.random() * adArr2.length);
+                const randomAD1 = adArr1[adIndex1];
+                const randomAD2 = adArr2[adIndex2];
                 this.attributes['prevDay'] = 'Bad';
-                this.emit(':ask', randomAD);
+                this.emit(':ask', randomAD1+randomAD+randomAD2);
 
             }
             else {
@@ -231,6 +267,11 @@ const handlers = {
             speechOutput = 'Please answer yes or no to start a quiz or not';
             this.response.speak(speechOutput); //Keeps session open without pinging user..
             this.response.shouldEndSession(false);
+            this.emit(':responseReady');
+        }
+        else if (this.attributes.skillState == 'middiscuss') {
+            speechOutput = 'We are in the middle of a discussion. Would you like to end it?';
+            this.response.speak(speechOutput).shouldEndSession(false);
             this.emit(':responseReady');
         }
         else {
@@ -250,6 +291,11 @@ const handlers = {
         var reprompt;
 
         //Initiation of game
+        if (this.attributes.skillState == 'middiscuss') {
+            speechOutput = 'We are in the middle of a discussion. Would you like to end it?';
+            this.response.speak(speechOutput).shouldEndSession(false);
+            this.emit(':responseReady');
+        }
         if (this.attributes['Score'] != null) {
             speechOutput = 'You took the quiz previously, and your score was ' + this.attributes['Score'] + '. Do you want to take this test again?';
             this.attributes.skillState = 'quizMainMenu';
@@ -325,6 +371,7 @@ const handlers = {
             .speak(say)
             .listen('try again, ' + say);
         this.emit(':responseReady');
+        this.attributes.skillState = null;
     },
     'UserNames': function () {
         if (this.attributes.skillState == 'nameiss') {
@@ -398,6 +445,12 @@ const handlers = {
             this.response.speak(speechOutput).shouldEndSession(false);
             this.emit(':responseReady');
         }
+        else if (this.attributes.skillState == 'middiscuss') {
+            this.attributes.skillState = null;
+            speechOutput = 'I enjoy these conversations. I am excited to hear from you again.';
+            this.response.speak(speechOutput).shouldEndSession(false);
+            this.emit(':responseReady');
+        }
         else {
             speechOutput = "Yes what? <say-as interpret-as='interjection'>tsk tsk</say-as> I didn't ask you anything";
             this.response.speak(speechOutput).shouldEndSession(false);
@@ -406,7 +459,11 @@ const handlers = {
     },
 
     'newstory': function () {
-
+        if (this.attributes.skillState == 'middiscuss') {
+            speechOutput = 'We are in the middle of a discussion. Would you like to end it?';
+            this.response.speak(speechOutput).shouldEndSession(false);
+            this.emit(':responseReady');
+        }
         //this.attributes['story'] = null;
         if (!this.attributes['story']) {
             const extreArr = this.t('STORY');
@@ -454,7 +511,11 @@ const handlers = {
     },
     'Numbers': function () {
         var speechOutput;
-
+        if (this.attributes.skillState == 'middiscuss') {
+            speechOutput = 'We are in the middle of a discussion. Would you like to end it?';
+            this.response.speak(speechOutput).shouldEndSession(false);
+            this.emit(':responseReady');
+        }
         if (this.attributes.skillState == 'Numbers') {
             if (this.attributes.quizNo < 8) {
                 var numberValue = this.event.request.intent.slots.number.value;
@@ -576,7 +637,6 @@ const handlers = {
                 .listen('try again, ' + say);
             // Create speech output
             this.emit(':responseReady');
-
         }
         else if (this.attributes.skillState == 'quizMainMenu') {
             speechOutput = 'Come back next time when you are ready';
@@ -587,6 +647,11 @@ const handlers = {
         else if (this.attributes.skillState == 'discuss') {
             this.attributes.skillState = null;
             speechOutput = 'I asked how are you feeling today. Maybe you should take a rest. What would you like to do next?';
+            this.response.speak(speechOutput).shouldEndSession(false);
+            this.emit(':responseReady');
+        }
+        else if (this.attributes.skillState == 'middiscuss') {
+            speechOutput = 'Alright, did you do anything else today?';
             this.response.speak(speechOutput).shouldEndSession(false);
             this.emit(':responseReady');
         }
@@ -606,6 +671,11 @@ const handlers = {
 
     },
     'Unhandled': function () {
+        if (this.attributes.skillState == 'middiscuss') {
+            speechOutput = 'That is interesting. How was it?';
+            this.response.speak(speechOutput).shouldEndSession(false);
+            this.emit(':responseReady');
+        }
         let say = 'The skill did not quite understand what you wanted to do.  Do you want to try something else? ';
         this.response
             .speak(say)
