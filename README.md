@@ -46,26 +46,26 @@ able to lower suicide rates and improve the overall quality of life.
   This text file has a step-by-step tutorial on how to connect a Lambda function to a DynamoDB Table. This also includes
   reading and writing information from the table via the Lambda function.
   
- -ad-strings.js
+ - ad-strings.js
   This .js file has a collection of strings that relate to the advice feature of Good Vibes. This is when a user asks
   Good Vibes for advice, Good Vibes will choose one of the responses from this collection to send to the user.
   
- -extreme.js
+ - extreme.js
   This .js file has a collection of strings that relate to the EXTREME case functionality of Good Vibes. This covers cases
   where a user suggests ideas of self-harm or violence, and Good Vibes will respond accordingly.
   
- -index.js
+ - index.js
   This .js file has all of the logic for the Good Vibes application. This is where all function calls and object 
   references are handled.
   
- -JSON
+ - JSON
   This file contains boiler-plate code for the interactionModel of the Lambda function to reference for responses.
   
- -questions.js
+ - questions.js
   This .js file has a collection of strings that relate to the Test functionality of Good Vibes. This includes questions
   from the Patient Health Questionnaire (PHQ-9). It allows Good Vibes to assess the severity of depression.
   
- -story.js
+ - story.js
   This .js file has a collection of strings that relate to the story functionality of Good Vibes. This includes
   personal stories from the developers to show the user that everybody will have struggles in life that we can overcomes.
   
