@@ -74,6 +74,9 @@ exports.handler = function (event, context, callback) {
 }
 
 const handlers = {
+    /**
+    * 'AMAZON.CancelIntent' is used for exiting the application.
+    */
     'AMAZON.CancelIntent': function () {
 
         let say = 'Goodbye.';
@@ -82,6 +85,10 @@ const handlers = {
 
         this.emit(':responseReady');
     },
+    /**
+    * 'AMAZON.HelpIntent' is used provide the user with all functionalities
+    * of the Good Vibes application.
+    */
     'AMAZON.HelpIntent': function () {
         var speechOutput
         if (this.attributes.skillState == "Numbers") {
@@ -111,6 +118,10 @@ const handlers = {
             this.emit(':responseReady');
         }
     },
+    /**
+    * 'AMAZON.StopIntent' is used to handle all cases in which
+    * the user wants to stop the current task that they are on.
+    */
     'AMAZON.StopIntent': function () {
         var speechOutput
         if (this.attributes.skillState == "Numbers") {
@@ -144,6 +155,14 @@ const handlers = {
         }
 
     },
+    /**
+    * The 'DiscussFeeling' function makes an attempt to maintain 
+    * a dialogue with the user. It uses a series of open-ended questions
+    * to keep the user in a loop of dialogue until the user ends the loop.
+    * This is meant to obtain as much information from the user as possible for better 
+    * feedback from the device to the user. It is also meant to provide a more comfortable
+    * and personal environment to the user. 
+    */
     'DiscussFeeling': function () {
         //function that handles the discussion feature
 
@@ -268,6 +287,10 @@ const handlers = {
         this.emit(':ask', randomExtre);
 
     },
+    /**
+    * 'LaunchRequest' is used to handle the Good Vibes application startup.
+    * This includes handling startups for new and current users in different ways.
+    */
     'LaunchRequest': function () {
         //this.attributes['userName']= null;
         let say = this.t('WELCOME1') + ' ' + this.t('HELP');
@@ -297,6 +320,11 @@ const handlers = {
         }
 
     },
+    /**
+    * 'clearName' is used to clear user data from the DynamoDB Table instance.
+    * This is useful for debugging purposes, but also gives users the satisfaction
+    * of knowing they have power over their data.
+    */
     'clearName': function () {
         this.attributes['story'] = null
         this.attributes['userName'] = null;
@@ -306,6 +334,12 @@ const handlers = {
             .listen('try again, ' + say);
         this.emit(':responseReady');
     },
+    /**
+    * 'UserNames' is used to handle user utterances regarding their names. These names
+    * are stored in the DynamoDB Table to be referenced between user sessions. This is to 
+    * promote a more unique and personal environment to the user and suggests that Good Vibes
+    * remembers who you are, because you matter.
+    */
     'UserNames': function () {
         if (this.attributes.skillState == 'nameiss') {
             this.attributes['userName'] = this.event.request.intent.slots.Name.value;
@@ -338,6 +372,10 @@ const handlers = {
         }
 
     },
+    /**
+    * 'AMAZON.YesIntent' this function handles all cases in which the user
+    * says 'Yes' and is handled specifically based on the program state.
+    */
     'AMAZON.YesIntent': function () {
         var speechOutput;
         if (this.attributes.skillState == 'quizMainMenu') {
