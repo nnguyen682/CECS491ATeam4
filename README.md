@@ -1,7 +1,7 @@
-# CECS491ATeam4
+## CECS491ATeam4
 Team4Alexa
 
-#Executive Summary
+# Executive Summary
 
 Millions of people throughout the United States experience mental health issues. Among those is issues is depression which can lead to 
 suicide and other harsh circumstances. Suicide is often overlooked as one of the leading causes of death in the United States. The suicide
@@ -18,4 +18,6 @@ mental health.
 
 A successful anti-depression application with Alexa can mitigate the  symptoms of depression experienced among its users. Although Alexa
 may not be physically present, her interactions will diminish the feelings of loneliness and helplessness. The application may even be
-able to lower suicide rates and improve the overall quality of life. 
+able to lower suicide rates and improve the overall quality of life.
+
+# File Contents
