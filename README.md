@@ -20,21 +20,21 @@ may not be physically present, her interactions will diminish the feelings of lo
 able to lower suicide rates and improve the overall quality of life.
 
 >## File Contents
- -GoodVibes(Folder)
+ - GoodVibes(Folder)
   This folder contains the CSS formatting files for the "Good Vibes - User Manual.html" and "Good Vibes- Developer.html" files.
  
- -.DS_Store
+ - .DS_Store
   This file has machine code pertaining to file storage information.
   
- -ClassMeetingNotes.txt
+ - ClassMeetingNotes.txt
   This text file contains notes that were taken during an in class meeting for developer feedback.
   
- -Good Vibes - User Manual.html
+ - Good Vibes - User Manual.html
   This html can be accessed via any browser and has information regarding the use of Good Vibes for the user end.
   This includes the installation of Good Vibes for Echo Devices and the Good Vibes applications/functionalities.
   There is also a FAQ section that answers some common user questions.
   
- -Good Vibes- Developer.html
+ - Good Vibes- Developer.html
   This html can be accessed via any browser and has information regarding further development for Good Vibes for the
   developer end. This includes information regarding the Good Vibes installtion and repository access.
   
