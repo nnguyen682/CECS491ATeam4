@@ -1,7 +1,7 @@
 # CECS491ATeam4
 Team4Alexa
 
-Executive Summary:
+#Executive Summary
 
 Millions of people throughout the United States experience mental health issues. Among those is issues is depression which can lead to 
 suicide and other harsh circumstances. Suicide is often overlooked as one of the leading causes of death in the United States. The suicide
