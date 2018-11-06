@@ -20,7 +20,7 @@ may not be physically present, her interactions will diminish the feelings of lo
 able to lower suicide rates and improve the overall quality of life.
 
 >## File Contents
- - GoodVibes(Folder)
+ - GoodVibes(Folder)   
   This folder contains the CSS formatting files for the "Good Vibes - User Manual.html" and "Good Vibes- Developer.html" files.
  
  - .DS_Store
