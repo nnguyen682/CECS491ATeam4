@@ -30,42 +30,42 @@ able to lower suicide rates and improve the overall quality of life.
    This text file contains notes that were taken during an in class meeting for developer feedback.
   
  - ### Good Vibes - User Manual.html   
-  This html can be accessed via any browser and has information regarding the use of Good Vibes for the user end.
+   This html can be accessed via any browser and has information regarding the use of Good Vibes for the user end.
   This includes the installation of Good Vibes for Echo Devices and the Good Vibes applications/functionalities.
   There is also a FAQ section that answers some common user questions.
   
  - ### Good Vibes- Developer.html   
-  This html can be accessed via any browser and has information regarding further development for Good Vibes for the
+   This html can be accessed via any browser and has information regarding further development for Good Vibes for the
   developer end. This includes information regarding the Good Vibes installtion and repository access.
   
  - ### Psychotherapy Notes.txt   
-  This text file has general notes on the different methods to psychotherapy. It acknowledges the different types of 
+   This text file has general notes on the different methods to psychotherapy. It acknowledges the different types of 
   depression and the optimal ways of handling these different types of depression.
   
  - ### Steps for DynamoDB.txt   
-  This text file has a step-by-step tutorial on how to connect a Lambda function to a DynamoDB Table. This also includes
+   This text file has a step-by-step tutorial on how to connect a Lambda function to a DynamoDB Table. This also includes
   reading and writing information from the table via the Lambda function.
   
  - ### ad-strings.js   
-  This .js file has a collection of strings that relate to the advice feature of Good Vibes. This is when a user asks
+   This .js file has a collection of strings that relate to the advice feature of Good Vibes. This is when a user asks
   Good Vibes for advice, Good Vibes will choose one of the responses from this collection to send to the user.
   
  - ### extreme.js   
-  This .js file has a collection of strings that relate to the EXTREME case functionality of Good Vibes. This covers cases
+   This .js file has a collection of strings that relate to the EXTREME case functionality of Good Vibes. This covers cases
   where a user suggests ideas of self-harm or violence, and Good Vibes will respond accordingly.
   
  - ### index.js   
-  This .js file has all of the logic for the Good Vibes application. This is where all function calls and object 
+   This .js file has all of the logic for the Good Vibes application. This is where all function calls and object 
   references are handled.
   
  - ### JSON   
-  This file contains boiler-plate code for the interactionModel of the Lambda function to reference for responses.
+   This file contains boiler-plate code for the interactionModel of the Lambda function to reference for responses.
   
  - ### questions.js   
-  This .js file has a collection of strings that relate to the Test functionality of Good Vibes. This includes questions
+   This .js file has a collection of strings that relate to the Test functionality of Good Vibes. This includes questions
   from the Patient Health Questionnaire (PHQ-9). It allows Good Vibes to assess the severity of depression.
   
  - ### story.js   
-  This .js file has a collection of strings that relate to the story functionality of Good Vibes. This includes
+   This .js file has a collection of strings that relate to the story functionality of Good Vibes. This includes
   personal stories from the developers to show the user that everybody will have struggles in life that we can overcomes.
   
