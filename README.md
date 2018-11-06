@@ -54,7 +54,7 @@ able to lower suicide rates and improve the overall quality of life.
    This .js file has a collection of strings that relate to the EXTREME case functionality of Good Vibes. This covers cases
   where a user suggests ideas of self-harm or violence, and Good Vibes will respond accordingly.
   
- - ### index.js   
+ - ### index.js :shipit: (where the magic happens)     
    This .js file has all of the logic for the Good Vibes application. This is where all function calls and object 
   references are handled.
   
