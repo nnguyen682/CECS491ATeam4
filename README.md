@@ -1,5 +1,4 @@
-# CECS491ATeam4
-### Team4Alexa
+# Good Vibes
 
 ## Executive Summary
 
