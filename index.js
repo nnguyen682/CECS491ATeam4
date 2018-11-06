@@ -422,7 +422,11 @@ const handlers = {
             this.emit(':responseReady');
         }
     },
-
+    /**
+    * 'newstory' is used to provide the user with a personal developer story. It will search for a story from
+    * the story collection file and read it to the user. This is to promote the idea that everybody goes through
+    * rough patches in their lives, but we all are capable of getting through it.
+    */
     'newstory': function () {
 
         //this.attributes['story'] = null;
@@ -581,7 +585,10 @@ const handlers = {
 
 
     },
-
+    /**
+    * 'AMAZON.NoIntent' is referenced anytime a user says 'No' and is handled in
+    * specific ways depending on the state of the application.
+    */
     'AMAZON.NoIntent': function () {
         var speechOutput;
         if (this.attributes.skillState == 'Numbers') {
@@ -626,6 +633,10 @@ const handlers = {
 
 
     },
+    /**
+    * 'Unhandled' is referenced for any user utterances that do not pertain to any of the
+    * functionalities of the Good Vibes application.
+    */
     'Unhandled': function () {
         let say = 'The skill did not quite understand what you wanted to do.  Do you want to try something else? ';
         this.response
