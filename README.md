@@ -21,13 +21,13 @@ able to lower suicide rates and improve the overall quality of life.
 
 >## File Contents
  - ### GoodVibes(Folder)   
-  This folder contains the CSS formatting files for the "Good Vibes - User Manual.html" and "Good Vibes- Developer.html" files.
+   This folder contains the CSS formatting files for the "Good Vibes - User Manual.html" and "Good Vibes- Developer.html" files.
  
  - ### .DS_Store   
-  This file has machine code pertaining to file storage information.
+   This file has machine code pertaining to file storage information.
   
  - ### ClassMeetingNotes.txt   
-  This text file contains notes that were taken during an in class meeting for developer feedback.
+   This text file contains notes that were taken during an in class meeting for developer feedback.
   
  - ### Good Vibes - User Manual.html   
   This html can be accessed via any browser and has information regarding the use of Good Vibes for the user end.
