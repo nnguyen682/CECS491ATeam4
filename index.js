@@ -8,41 +8,49 @@ const invocationName = "good vibes";
 */
 const languageStrings = {
     'en': {
-        'translation': {     
+        'translation': {
+            //Has responses for a "good" discussion branch (user is giving positive feedback).
             GOODDISCUSSION: [
                 "That's great to hear!",
                 "I'm glad to hear that.",
                 "That's great news.",
                 "I am very happy to hear that!",
             ],
+            //Has responses for a "neutral" discussion branch (user is giving average feedback).
             NEUTRALDISCUSSION: [
                 "That's good to hear.",
                 "That's nice.",
                 "That's good.",
                 "On the bright side, things could be worse.",
             ],
+            //Has responses for a "bad" discussion branch (user is giving negative feedback).
             BADDISCUSSION: [
                 "I'm really sorry to hear that.",
                 "I'm sorry to hear that.",
                 "That's unfortunate, I'm sure things will get better.",
             ],
+            //Open-ended questions to ask the user.
             OPENASK: [
                 "What did you do today?",
                 "What happened today?",
             ],
+            //Restricted (yes/no) questions to ask the user.
             RESTRICTEDASK: [
                 "Did you do anything today?",
                 "Did you do anything interesting today?",
                 "Did you do anything fun today?",
             ],
+            //Responses to a "bad" discussion tree.
             IFTHISISBAD: [
                 "Be kind to yourself",
                 "Keep your head up, Things will get brighter",
                 "That's fake news. If you change your mentality, you can change your reality",
                 "It's ok to give yourself some space to breathe and regroup.",
             ],
+            //Message that tells the user all of the functionalities of the Good Vibes application.
             OPTION_MESSAGE: "We have three options. You can say Advice to listen to a piece of advice, say Take a test to take "
                 + "our assessment test, or discuss my feelings to start  discussing your feelings ",
+            //Greeting messages to tell the user.
             FEELING_MESSEGE: 'How are you feeling today?',
             'WELCOME1': 'Welcome to good vibes!',//<say-as interpret-as="interjection">dun dun dun!</say-as>
             'WELCOME2': 'Greetings!',
