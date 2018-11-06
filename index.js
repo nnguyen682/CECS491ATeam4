@@ -2,9 +2,20 @@
 
 const invocationName = "good vibes";
 
+/**
+* 'languageStrings' is a collection of string collections 
+* that Alexa will reference and use to respond to users.
+*/
 const languageStrings = {
     'en': {
         'translation': {
+            
+            /**
+            * 'ADVICES' is referenced for responses resulting from a 
+            * user utterance that calls the 'Advice' function. This 
+            * function offers advice that might be helpful to a user
+            * that is experiencing an unhealthy state of mind.
+            */
             ADVICES: [
                 'Sometimes the most productive thing you can do is relax. ',
                 'The time to relax is when you do not have time for it. ',
@@ -21,6 +32,13 @@ const languageStrings = {
                 'Give someone a hug today.',
                 'Dont sweat the small things.',
             ],
+            
+            /**
+            * 'EXTREME' is referenced for responses resulting from a 
+            * user utterance that calls the 'EXTREME' function. This 
+            * covers cases in which a user gives an utterance that 
+            * reflects signs of self harm or violence.
+            */
             EXTREME: [
                 "Don't do it! I don't want you to die. ",
                 "There are people that love you. ",
@@ -32,6 +50,13 @@ const languageStrings = {
                 "Your life is too valuable to give up on.",
                 "Don't let your problems get the best of you, there is still so much to live for.",
             ],
+            
+            /**
+            * 'QUESTIONS' is referenced for responses resulting from a 
+            * user utterance that calls the 'Test' function. The question
+            * set and scoring system come from the Patient Health 
+            * Questionnaire (PHQ-9)
+            */
             QUESTIONS: [
                 "How often did you feel little interest or pleasure in doing things?",
                 "How often did you feel down, depressed or hopeless?",
@@ -43,6 +68,14 @@ const languageStrings = {
                 "How often did you move or speak slower or quicker than usual such that other people noticed?",
                 "How ofthen did you have thoughts that you would be better off dead, or of hurting yourself?",
             ],
+            
+            /**
+            * 'STORY' is referenced for responses resulting from a 
+            * user utterance that calls the 'newstory' function. This 
+            * includes short stories from the developers that will
+            * promote the idea that we are all humans that go through
+            * hard times. 
+            */
             STORY: [
                 "This is a personal story from Nhan. I lost my wallet.",
                 "This is a personal story from Nhan. I'm single.",
@@ -259,7 +292,7 @@ const handlers = {
         }
         if (this.attributes.skillState == null) {
             resetAttributes.call(this);
-            speechOutput = 'I will ask you three questions based on your experiences within the past two weeks. To answer these questions, please say zero for not at all. One for several days. Two for more than half the days. And three for nearly every day. Are you ready to begin?';
+            speechOutput = 'I will ask you eight questions based on your experiences within the past two weeks. To answer these questions, please say zero for not at all. One for several days. Two for more than half the days. And three for nearly every day. Are you ready to begin?';
             this.attributes.skillState = 'quizMainMenu';
             this.response.speak(speechOutput); //Keeps session open without pinging user..
             this.response.shouldEndSession(false);
