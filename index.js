@@ -8,82 +8,7 @@ const invocationName = "good vibes";
 */
 const languageStrings = {
     'en': {
-        'translation': {
-            
-            /**
-            * 'ADVICES' is referenced for responses resulting from a 
-            * user utterance that calls the 'Advice' function. This 
-            * function offers advice that might be helpful to a user
-            * that is experiencing an unhealthy state of mind.
-            */
-            ADVICES: [
-                'Sometimes the most productive thing you can do is relax. ',
-                'The time to relax is when you do not have time for it. ',
-                'If you ar having trouble sleeping, try putting some lavender oil on yor feet',
-                'Take a quick break from your busy life and try meditating for a few minutes',
-                'The mind should be allowed some relaxation, that it may return to its work all the better for the rest. ',
-                "Relaxation means releasing all concern and tension and letting the natural order of life flow through one's being. ",
-                'Your mind will answer most questions if you learn to relax and wait for the answer. ',
-                "If you are feeling down, try working on a hobby to keep your mind occupied.",
-                "Isolation can be a key factor of depression. Contact a friend or family member and have a conversation with them.",
-                "Overworking and continuous stress can lead to feelings of depression or hopelessness. Try out different strategies for coping with stress to see what works best for you.",
-                "If you notice mood changes during fall or winter, you may have a case of seasonal affective disorder. Do not worry, it is only temporary, but if these mood swings escalate, you may want to seek medical help.",
-                'Make sure you floss your teeth today! Its more important than you think.',
-                'Give someone a hug today.',
-                'Dont sweat the small things.',
-            ],
-            
-            /**
-            * 'EXTREME' is referenced for responses resulting from a 
-            * user utterance that calls the 'EXTREME' function. This 
-            * covers cases in which a user gives an utterance that 
-            * reflects signs of self harm or violence.
-            */
-            EXTREME: [
-                "Don't do it! I don't want you to die. ",
-                "There are people that love you. ",
-                'There are still people here that need you. ',
-                "Things will get better tomorrow. ",
-                "You are a valuable person, don't think any less of yourself.",
-                "You deserve good health and a positive outlook on life.",
-                "Most, if not all, of the struggles that you are experiencing right now are temporary.",
-                "Your life is too valuable to give up on.",
-                "Don't let your problems get the best of you, there is still so much to live for.",
-            ],
-            
-            /**
-            * 'QUESTIONS' is referenced for responses resulting from a 
-            * user utterance that calls the 'Test' function. The question
-            * set and scoring system come from the Patient Health 
-            * Questionnaire (PHQ-9)
-            */
-            QUESTIONS: [
-                "How often did you feel little interest or pleasure in doing things?",
-                "How often did you feel down, depressed or hopeless?",
-                'How often did you have trouble falling or staying asleep, or sleeping too much?',
-                "How often did you feel tired or had little energy?",
-                "How often did you have a poor appetite or experience overeating?",
-                "How often did you feel bad about yourself or feel that you are a failure or feel like you let yourself or others down?",
-                "How often did you struggle to concentrate on things, such as reading a book or watching television?",
-                "How often did you move or speak slower or quicker than usual such that other people noticed?",
-                "How ofthen did you have thoughts that you would be better off dead, or of hurting yourself?",
-            ],
-            
-            /**
-            * 'STORY' is referenced for responses resulting from a 
-            * user utterance that calls the 'newstory' function. This 
-            * includes short stories from the developers that will
-            * promote the idea that we are all humans that go through
-            * hard times. 
-            */
-            STORY: [
-                "This is a personal story from Nhan. I lost my wallet.",
-                "This is a personal story from Nhan. I'm single.",
-                "This is a personal story from Anthony. Nhan said I am annoying.",
-                "This is a personal story from Anothony. My parents are homeless and I'm trying to finish college so i can support them.",
-                "This is a personal story from Juan. I don't have a sad story",
-                "This is a personal story from Juan. This is Nhan saying on Juan behalf, He doesn't really have any sad story."
-            ],
+        'translation': {     
             GOODDISCUSSION: [
                 "That's great to hear!",
                 "I'm glad to hear that.",
@@ -130,6 +55,10 @@ const languageStrings = {
     // , 'jp-JP': { 'translation' : { 'WELCOME'   : 'Japanese Welcome etc.' } }
 };
 const APP_ID = undefined;  // TODO replace with your app ID (OPTIONAL).
+//the first three constants are references to the list of strings in their corresponding file
+const advice = require("ad-strings");
+const question = require("questions");
+const extreme = require("extreme");
 
 const Alexa = require("alexa-sdk");
 const https = require("https");
@@ -216,7 +145,7 @@ const handlers = {
 
     },
     'DiscussFeeling': function () {
-
+        //function that handles the discussion feature
 
         var speechOutput;
         if (this.attributes.skillState == 'quizMainMenu') {
@@ -258,6 +187,12 @@ const handlers = {
         }
 
     },
+    /**
+    * 'Advice' is referenced for responses resulting from a 
+    * user utterance that calls the 'Advice' function. This 
+    * function offers advice that might be helpful to a user
+    * that is experiencing an unhealthy state of mind.
+    */
     'Advice': function () {
         var speechOutput;
         if (this.attributes.skillState == 'quizMainMenu') {
@@ -268,7 +203,7 @@ const handlers = {
         }
         else {
             let say = 'Here is your advice. ';
-            const adArr = this.t('ADVICES');
+            const adArr = advice;
             const adIndex = Math.floor(Math.random() * adArr.length);
             const randomAD = adArr[adIndex];
             this.emit(':ask', randomAD);
@@ -277,6 +212,12 @@ const handlers = {
 
 
     },
+    /**
+    * 'Test' is referenced for responses resulting from a 
+    * user utterance that calls the 'Test' function. The question
+    * set and scoring system come from the Patient Health 
+    * Questionnaire (PHQ-9)
+    */
     'Test': function () {
         newSessionHandler.call(this);
         var speechOutput;
@@ -312,8 +253,14 @@ const handlers = {
             this.emit(':responseReady');
         }
     },
+    /**
+    * 'EXTREME' is referenced for responses resulting from a 
+    * user utterance that calls the 'EXTREME' function. This 
+    * covers cases in which a user gives an utterance that 
+    * reflects signs of self harm or violence.
+    */
     'EXTREME': function () {
-        const extreArr = this.t('EXTREME');
+        const extreArr = extreme;
         const extreIndex = Math.floor(Math.random() * extreArr.length);
         const randomExtre = extreArr[extreIndex];
 
@@ -396,9 +343,9 @@ const handlers = {
         if (this.attributes.skillState == 'quizMainMenu') {
             this.attributes.quizScore = 0;
             this.attributes.quizNo = 0;
-            const extreArr = this.t('QUESTIONS');
-            const randomExtre = extreArr[this.attributes.quizNo];
-            speechOutput = randomExtre;
+            const questArr = question;
+            const randomQuest = questArr[this.attributes.quizNo];
+            speechOutput = randomQuest;
             this.attributes.skillState = 'Numbers';
             this.response.speak(speechOutput).shouldEndSession(false);
             this.emit(':responseReady');
@@ -442,7 +389,7 @@ const handlers = {
 
         //this.attributes['story'] = null;
         if (!this.attributes['story']) {
-            const extreArr = this.t('STORY');
+            const extreArr = this.;
             this.attributes['story'] = extreArr;
             var newStory = [];
             var i = 0;
@@ -485,6 +432,9 @@ const handlers = {
         this.response.speak(speechOutput).shouldEndSession(false);
         this.emit(':responseReady');
     },
+    /** The 'Numbers' function deals with the logic behind calculating the user score 
+    * for the depression assement test
+    */
     'Numbers': function () {
         var speechOutput;
 
@@ -500,7 +450,7 @@ const handlers = {
                 else if (numberValue == 3)
                     this.attributes.quizScore += 3;
                 this.attributes.quizNo += 1;
-                const extreArr = this.t('QUESTIONS');
+                const extreArr = question;
                 const randomExtre = extreArr[this.attributes.quizNo];
                 speechOutput = randomExtre;
                 this.response.speak(speechOutput).shouldEndSession(false);
@@ -518,7 +468,7 @@ const handlers = {
                     this.attributes.quizScore += 2;
                 else if (numberValue == 3)
                     this.attributes.quizScore += 3;
-                const adArr = this.t('ADVICES');
+                const adArr = advice;
                 const adIndex = Math.floor(Math.random() * adArr.length);
                 const randomAD = adArr[adIndex];
                 this.attributes['Score'] = this.attributes.quizScore;
