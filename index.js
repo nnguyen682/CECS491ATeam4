@@ -172,7 +172,7 @@ const handlers = {
     * and personal environment to the user. 
     */
     'DiscussFeeling': function () {
-        //function that handles the discussion feature
+
 
         var speechOutput;
         if (this.attributes.skillState == 'quizMainMenu') {
@@ -193,18 +193,45 @@ const handlers = {
             }
             let slotValues = getSlotValues(filledSlots);
             if (slotValues.feeling.resolved == "Good") {
-                this.attributes.skillState = null;
+                //this.attributes.skillState = null;
+                //var randomIndex = randomIndexOfArray(theStory);
+                const adArr1 = this.t('GOODDISCUSSION');
+                const adArr2 = this.t('OPENASK');
+                if(this.attributes.skillState == 'middiscuss'){
+                    const adArr2 = this.t('OPENASKCONTINUED');
+                }
+                else{
+                    const adArr2 = this.t('OPENASK');
+                }
+                var randomIndex = randomIndexOfArray(adArr1)
+                var randomIndex2 = randomIndexOfArray(adArr2)
+                const randomAD1 = adArr1[randomIndex];
+                const randomAD2 = adArr2[randomIndex2];
+                const output = randomAD1 + randomAD2;
+                
+                this.attributes.skillState = 'middiscuss';
                 this.attributes['prevDay'] = 'Good';
-                this.emit(':ask', this.t('Glad to hear that, keep up the good work'));
+                //this.emit(':ask', this.t('Glad to hear that, keep up the good work'));
+                this.emit(':ask', this.t(output));
 
             }
             else if (slotValues.feeling.resolved == "Bad") {
-                this.attributes.skillState = null;
-                const adArr = this.t('IFTHISISBAD');
-                const adIndex = Math.floor(Math.random() * adArr.length);
-                const randomAD = adArr[adIndex];
+                this.attributes.skillState = 'middiscuss';
+                const adArr1 = this.t('BADDISCUSSION');
+                const adArr2 = this.t('OPENASK');
+                if(this.attributes.skillState == 'middiscuss'){
+                    const adArr2 = this.t('OPENASKCONTINUED');
+                }
+                else{
+                    const adArr2 = this.t('OPENASK');
+                }
+                var randomIndex = randomIndexOfArray(adArr1)
+                var randomIndex2 = randomIndexOfArray(adArr2)
+                const randomAD1 = adArr1[randomIndex];
+                const randomAD2 = adArr2[randomIndex2];
+                const output = randomAD1 + randomAD2;
                 this.attributes['prevDay'] = 'Bad';
-                this.emit(':ask', randomAD);
+                this.emit(':ask', output);
 
             }
             else {
@@ -592,6 +619,23 @@ const handlers = {
         }
 
 
+    },
+    'amazonNumber': function () {
+        var speechOutput = null;
+        if (this.attributes.skillState == 'Numbers'){
+            speechOutput = 'Please answer between 0 to 3';
+            this.response.speak(speechOutput).shouldEndSession(false);
+            this.emit(':responseReady');
+        }
+        else
+        {
+            speechOutput = 'Yeah I like numbers too. my favorite one is 13';
+            this.response.speak(speechOutput).shouldEndSession(false);
+            this.emit(':responseReady');
+        }
+        speechOutput = 'Yeah I like numbers too. my favorite one is 13';
+            this.response.speak(speechOutput).shouldEndSession(false);
+            this.emit(':responseReady');
     },
     /**
     * 'AMAZON.NoIntent' is referenced anytime a user says 'No' and is handled in
