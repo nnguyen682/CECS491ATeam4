@@ -6,12 +6,14 @@ const invocationName = "good vibes";
 * 'languageStrings' is a collection of string collections 
 * that Alexa will reference and use to respond to users.
 */
+
 const languageStrings = {
     'en': {
         'translation': {
+            
             //Has responses for a "good" discussion branch (user is giving positive feedback).
             GOODDISCUSSION: [
-                "That's great to hear!",
+                "That's great to hear! ",
                 "I'm glad to hear that.",
                 "That's great news.",
                 "I am very happy to hear that!",
@@ -34,7 +36,12 @@ const languageStrings = {
                 "What did you do today?",
                 "What happened today?",
             ],
-            //Restricted (yes/no) questions to ask the user.
+            OPENASKCONTINUED: [
+                "What else did you do today?",
+                "What else happened today?",
+                "Did you do anything else today?",
+            ],
+            //Restricted (yes/no) questions to ask the user
             RESTRICTEDASK: [
                 "Did you do anything today?",
                 "Did you do anything interesting today?",
@@ -48,10 +55,10 @@ const languageStrings = {
                 "It's ok to give yourself some space to breathe and regroup.",
             ],
             //Message that tells the user all of the functionalities of the Good Vibes application.
-            OPTION_MESSAGE: "We have three options. You can say Advice to listen to a piece of advice, say Take a test to take "
-                + "our assessment test, or discuss my feelings to start  discussing your feelings ",
+            OPTION_MESSAGE: "We have four options. You can say Advice to listen to a piece of advice, say Take a test to take "
+                + "our assessment test, or discuss my feelings to start  discussing your feelings, and story to listen to stories ",
             //Greeting messages to tell the user.
-            FEELING_MESSEGE: 'How are you feeling today?',
+			FEELING_MESSEGE: 'How are you feeling today?',
             'WELCOME1': 'Welcome to good vibes!',//<say-as interpret-as="interjection">dun dun dun!</say-as>
             'WELCOME2': 'Greetings!',
             'WELCOME3': 'Hello there!',
@@ -63,13 +70,14 @@ const languageStrings = {
     // , 'jp-JP': { 'translation' : { 'WELCOME'   : 'Japanese Welcome etc.' } }
 };
 const APP_ID = undefined;  // TODO replace with your app ID (OPTIONAL).
+
+const Alexa = require("alexa-sdk");
+const https = require("https");
+
 //the first three constants are references to the list of strings in their corresponding file
 const advice = require("ad-strings");
 const question = require("questions");
 const extreme = require("extreme");
-
-const Alexa = require("alexa-sdk");
-const https = require("https");
 
 exports.handler = function (event, context, callback) {
     let alexa = Alexa.handler(event, context);
@@ -82,7 +90,7 @@ exports.handler = function (event, context, callback) {
 }
 
 const handlers = {
-    /**
+	/**
     * 'AMAZON.CancelIntent' is used for exiting the application.
     */
     'AMAZON.CancelIntent': function () {
@@ -118,6 +126,11 @@ const handlers = {
             this.response.speak(speechOutput).shouldEndSession(false);
             this.emit(':responseReady');
         }
+        else if (this.attributes.skillState == 'middiscuss') {
+            speechOutput = 'We are in the middle of a discussion. Would you like to end it?';
+            this.response.speak(speechOutput).shouldEndSession(false);
+            this.emit(':responseReady');
+        }
         else {
             let say = this.t('OPTION_MESSAGE');
             this.response
@@ -147,6 +160,12 @@ const handlers = {
             this.response.shouldEndSession(false);
             this.emit(':responseReady');
         }
+        else if (this.attributes.skillState == 'middiscuss') {
+            this.attributes.skillState = null;
+            speechOutput = 'I enjoy these conversations. I am excited to hear from you again.';
+            this.response.speak(speechOutput).shouldEndSession(false);
+            this.emit(':responseReady');
+        }
         else {
             if (this.attributes.Result != null) {
                 let say = 'Here is a reminder of what you got from the test.';
@@ -172,8 +191,6 @@ const handlers = {
     * and personal environment to the user. 
     */
     'DiscussFeeling': function () {
-
-
         var speechOutput;
         if (this.attributes.skillState == 'quizMainMenu') {
             speechOutput = 'Please answer yes or no to start the quiz or not';
@@ -185,9 +202,6 @@ const handlers = {
             this.attributes.skillState = 'discuss'
             // delegate to Alexa to collect all the required slots
             let filledSlots = delegateSlotCollection.call(this);
-
-
-
             if (!filledSlots) {
                 return;
             }
@@ -255,16 +269,18 @@ const handlers = {
             this.response.shouldEndSession(false);
             this.emit(':responseReady');
         }
+        else if (this.attributes.skillState == 'middiscuss') {
+            speechOutput = 'We are in the middle of a discussion. Would you like to end it?';
+            this.response.speak(speechOutput).shouldEndSession(false);
+            this.emit(':responseReady');
+        }
         else {
             let say = 'Here is your advice. ';
-            const adArr = advice;
+            const adArr = this.t('ADVICES');
             const adIndex = Math.floor(Math.random() * adArr.length);
             const randomAD = adArr[adIndex];
             this.emit(':ask', randomAD);
         }
-
-
-
     },
     /**
     * 'Test' is referenced for responses resulting from a 
@@ -277,7 +293,12 @@ const handlers = {
         var speechOutput;
         var reprompt;
 
-        //Initiation of game
+        //Initiation of test
+        if (this.attributes.skillState == 'middiscuss') {
+            speechOutput = 'We are in the middle of a discussion. Would you like to end it?';
+            this.response.speak(speechOutput).shouldEndSession(false);
+            this.emit(':responseReady');
+        }
         if (this.attributes['Score'] != null) {
             speechOutput = 'You took the quiz previously, and your score was ' + this.attributes['Score'] + '. Do you want to take this test again?';
             this.attributes.skillState = 'quizMainMenu';
@@ -287,7 +308,7 @@ const handlers = {
         }
         if (this.attributes.skillState == null) {
             resetAttributes.call(this);
-            speechOutput = 'I will ask you eight questions based on your experiences within the past two weeks. To answer these questions, please say zero for not at all. One for several days. Two for more than half the days. And three for nearly every day. Are you ready to begin?';
+            speechOutput = 'I will ask you three questions based on your experiences within the past two weeks. To answer these questions, please say zero for not at all. One for several days. Two for more than half the days. And three for nearly every day. Are you ready to begin?';
             this.attributes.skillState = 'quizMainMenu';
             this.response.speak(speechOutput); //Keeps session open without pinging user..
             this.response.shouldEndSession(false);
@@ -314,13 +335,25 @@ const handlers = {
     * reflects signs of self harm or violence.
     */
     'EXTREME': function () {
-        const extreArr = extreme;
+        const extreArr = this.t('EXTREME');
         const extreIndex = Math.floor(Math.random() * extreArr.length);
         const randomExtre = extreArr[extreIndex];
 
         // Create speech output
         this.emit(':ask', randomExtre);
+    },
+    'Activity': function () {
+        if (this.attributes.skillState == 'middiscuss') {
+           // let filledSlots = delegateSlotCollection.call(this);
+            //let slotValues = getSlotValues(filledSlots);
+            const speechOutput = "When I still have my human body, I play tons of " + this.event.request.intent.slots.sport.value +". Did your team win?"; //+ slotValues.type.resolved;
+            //speechOutput += ". Did you win?";
+            this.response.speak(speechOutput).shouldEndSession(false);
+            this.emit(':responseReady');
+        }
 
+        // Create speech output
+        //this.emit(':ask', this.t("this is Activity"));
     },
     /**
     * 'LaunchRequest' is used to handle the Good Vibes application startup.
@@ -332,24 +365,27 @@ const handlers = {
         if (!this.attributes['userName']) {
             this.attributes.skillState = 'nameiss';
             say += "I see it's your first time here. Please tell me your name";
-            this.response
-                .speak(say)
-                .listen('try again, ' + say);
+            //this.response
+              //  .speak(say)
+                //.listen('try again, ' + say);
+                this.response.speak(say).shouldEndSession(false);
             this.emit(':responseReady');
         }
         else {
             let sayWelcome = "Wellcome back " + this.attributes['userName'] + '! ' + this.t('HELP');
             if (this.attributes['prevDay'] == 'Good') {
-                sayWelcome += "You mentioned last time that you were having a good day. I hope things are still looking up for you.";
+                sayWelcome += " I hope things are still looking up for you.";
                 this.attributes.skillState = null;
             }
             else if (this.attributes['prevDay'] == 'Bad') {
-                sayWelcome += "Last time you mentioned that you were having a bad day. Have things gotten any better since then?";
+                sayWelcome += " Have things gotten any better since then?";
                 this.attributes.skillState = 'anyBetter';
             }
+            sayWelcome +=  " Say help if you like to hear the options again.";
             this.response
                 .speak(sayWelcome)
                 .listen('try again, ' + say);
+              // this.response.speak(sayWelcome).shouldEndSession(false);
             this.emit(':responseReady');
 
         }
@@ -364,9 +400,11 @@ const handlers = {
         this.attributes['story'] = null
         this.attributes['userName'] = null;
         let say = "Database of Username and Story Intentions set back to null";
-        this.response
-            .speak(say)
-            .listen('try again, ' + say);
+        this.attributes.skillState = null;
+        //this.response
+          //  .speak(say)
+            //.listen('try again, ' + say);
+            this.response.speak(say).shouldEndSession(false);
         this.emit(':responseReady');
     },
     /**
@@ -378,36 +416,40 @@ const handlers = {
     'UserNames': function () {
         if (this.attributes.skillState == 'nameiss') {
             this.attributes['userName'] = this.event.request.intent.slots.Name.value;
-            let say = "Hello " + this.event.request.intent.slots.Name.value;
-            this.response
-                .speak(say)
-                .listen('try again, ' + say);
+            let say = "Hello " + this.event.request.intent.slots.Name.value + ". " + this.t('OPTION_MESSAGE');
+            //this.response
+              //  .speak(say)
+                //.listen('try again, ' + say);
             // Create speech output
-            this.emit(':responseReady');
+            this.response.speak(say).shouldEndSession(false);
             this.attributes.skillState = null;
+            this.emit(':responseReady');
+            
         }
         else if (this.attributes.skillState == null && this.event.request.intent.slots.nameIs.value != null) {
             let say = "are you sure you wanna change your name from " + this.attributes['userName'] + " to " + this.event.request.intent.slots.Name.value + "?";
             this.attributes.changeName = this.event.request.intent.slots.Name.value;
             this.attributes.skillState = "yesNoName";
-            this.response
-                .speak(say)
-                .listen('try again, ' + say);
+            //this.response
+              //  .speak(say)
+                //.listen('try again, ' + say);
             // Create speech output
+            this.response.speak(say).shouldEndSession(false);
             this.emit(':responseReady');
 
         }
         else {
             let say = "We are not sure what you mean by that?";
-            this.response
-                .speak(say)
-                .listen('try again, ' + say);
+            //this.response
+              //  .speak(say)
+               // .listen('try again, ' + say);
             // Create speech output
+            this.response.speak(say).shouldEndSession(false);
             this.emit(':responseReady');
         }
 
     },
-    /**
+     /**
     * 'AMAZON.YesIntent' this function handles all cases in which the user
     * says 'Yes' and is handled specifically based on the program state.
     */
@@ -416,9 +458,9 @@ const handlers = {
         if (this.attributes.skillState == 'quizMainMenu') {
             this.attributes.quizScore = 0;
             this.attributes.quizNo = 0;
-            const questArr = question;
-            const randomQuest = questArr[this.attributes.quizNo];
-            speechOutput = randomQuest;
+            const extreArr = this.t('QUESTIONS');
+            const randomExtre = extreArr[this.attributes.quizNo];
+            speechOutput = randomExtre;
             this.attributes.skillState = 'Numbers';
             this.response.speak(speechOutput).shouldEndSession(false);
             this.emit(':responseReady');
@@ -426,12 +468,14 @@ const handlers = {
         else if (this.attributes.skillState == "yesNoName") {
             let say = "Your name is changed to " + this.attributes.changeName;
             this.attributes['userName'] = this.attributes.changeName;
-            this.response
-                .speak(say)
-                .listen('try again, ' + say);
+           // this.response
+             //   .speak(say)
+               // .listen('try again, ' + say);
             // Create speech output
-            this.emit(':responseReady');
+            this.response.speak(say).shouldEndSession(false);
             this.attributes.skillState = null;
+            this.emit(':responseReady');
+           
         }
         else if (this.attributes.skillState == 'Numbers') {
             speechOutput = 'You are in the middle of a test, Please choose a number from 0 to 3 ';
@@ -451,6 +495,12 @@ const handlers = {
             this.response.speak(speechOutput).shouldEndSession(false);
             this.emit(':responseReady');
         }
+        else if (this.attributes.skillState == 'middiscuss') {
+            this.attributes.skillState = null;
+            speechOutput = 'I enjoy these conversations. I am excited to hear from you again.';
+            this.response.speak(speechOutput).shouldEndSession(false);
+            this.emit(':responseReady');
+        }
         else {
             speechOutput = "Yes what? <say-as interpret-as='interjection'>tsk tsk</say-as> I didn't ask you anything";
             this.response.speak(speechOutput).shouldEndSession(false);
@@ -463,10 +513,14 @@ const handlers = {
     * rough patches in their lives, but we all are capable of getting through it.
     */
     'newstory': function () {
-
+         if (this.attributes.skillState == 'middiscuss') {
+            speechOutput = 'We are in the middle of a discussion. Would you like to end it?';
+            this.response.speak(speechOutput).shouldEndSession(false);
+            this.emit(':responseReady');
+        }
         //this.attributes['story'] = null;
         if (!this.attributes['story']) {
-            const extreArr = this.;
+            const extreArr = this.t('STORY');
             this.attributes['story'] = extreArr;
             var newStory = [];
             var i = 0;
@@ -514,7 +568,11 @@ const handlers = {
     */
     'Numbers': function () {
         var speechOutput;
-
+         if (this.attributes.skillState == 'middiscuss') {
+            speechOutput = 'We are in the middle of a discussion. Would you like to end it?';
+            this.response.speak(speechOutput).shouldEndSession(false);
+            this.emit(':responseReady');
+        }
         if (this.attributes.skillState == 'Numbers') {
             if (this.attributes.quizNo < 8) {
                 var numberValue = this.event.request.intent.slots.number.value;
@@ -527,7 +585,7 @@ const handlers = {
                 else if (numberValue == 3)
                     this.attributes.quizScore += 3;
                 this.attributes.quizNo += 1;
-                const extreArr = question;
+                const extreArr = this.t('QUESTIONS');
                 const randomExtre = extreArr[this.attributes.quizNo];
                 speechOutput = randomExtre;
                 this.response.speak(speechOutput).shouldEndSession(false);
@@ -545,7 +603,7 @@ const handlers = {
                     this.attributes.quizScore += 2;
                 else if (numberValue == 3)
                     this.attributes.quizScore += 3;
-                const adArr = advice;
+                const adArr = this.t('ADVICES');
                 const adIndex = Math.floor(Math.random() * adArr.length);
                 const randomAD = adArr[adIndex];
                 this.attributes['Score'] = this.attributes.quizScore;
@@ -613,7 +671,7 @@ const handlers = {
         }
 
         else {
-            speechOutput = 'something wrong ';
+            speechOutput = "the quiz didn't start yet. Please say discuss to open it. ";
             this.response.speak(speechOutput).shouldEndSession(false);
             this.emit(':responseReady');
         }
@@ -637,7 +695,7 @@ const handlers = {
             this.response.speak(speechOutput).shouldEndSession(false);
             this.emit(':responseReady');
     },
-    /**
+	/**
     * 'AMAZON.NoIntent' is referenced anytime a user says 'No' and is handled in
     * specific ways depending on the state of the application.
     */
@@ -651,10 +709,11 @@ const handlers = {
         else if (this.attributes.skillState == "yesNoName") {
             let say = "Your name stays the same, which is: " + this.attributes['userName'];
             this.attributes.skillState = null;
-            this.response
-                .speak(say)
-                .listen('try again, ' + say);
+           // this.response
+             //   .speak(say)
+               // .listen('try again, ' + say);
             // Create speech output
+            this.response.speak(say).shouldEndSession(false);
             this.emit(':responseReady');
 
         }
@@ -667,6 +726,11 @@ const handlers = {
         else if (this.attributes.skillState == 'discuss') {
             this.attributes.skillState = null;
             speechOutput = 'I asked how are you feeling today. Maybe you should take a rest. What would you like to do next?';
+            this.response.speak(speechOutput).shouldEndSession(false);
+            this.emit(':responseReady');
+        }
+        else if (this.attributes.skillState == 'middiscuss') {
+            speechOutput = 'Alright, did you do anything else today?';
             this.response.speak(speechOutput).shouldEndSession(false);
             this.emit(':responseReady');
         }
@@ -685,15 +749,35 @@ const handlers = {
 
 
     },
-    /**
-    * 'Unhandled' is referenced for any user utterances that do not pertain to any of the
-    * functionalities of the Good Vibes application.
-    */
-    'Unhandled': function () {
+    'AMAZON.FallbackIntent': function () {
+        var speechOutput = '';
+     if (this.attributes.skillState == 'middiscuss') {
+            speechOutput = 'That is interesting. How was it?';
+            this.response.speak(speechOutput).shouldEndSession(false);
+            this.emit(':responseReady');
+        }
         let say = 'The skill did not quite understand what you wanted to do.  Do you want to try something else? ';
         this.response
             .speak(say)
             .listen(say);
+            this.emit(':responseReady');
+     },
+     /**
+    * 'Unhandled' is referenced for any user utterances that do not pertain to any of the
+    * functionalities of the Good Vibes application.
+    */
+    'Unhandled': function () {
+        var speechOutput = '';
+     if (this.attributes.skillState == 'middiscuss') {
+            speechOutput = 'That is interesting. How was it?';
+            this.response.speak(speechOutput).shouldEndSession(false);
+            this.emit(':responseReady');
+        }
+        let say = 'The skill did not quite understand what you wanted to do.  Do you want to try something else? ';
+        this.response
+            .speak(say)
+            .listen(say);
+            this.emit(':responseReady');
     }
 };
 //  ------ Helper Functions -----------------------------------------------
