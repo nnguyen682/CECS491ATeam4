@@ -2,36 +2,72 @@
 
 const invocationName = "good vibes";
 
-/**
-* 'languageStrings' is a collection of string collections 
-* that Alexa will reference and use to respond to users.
-*/
-
 const languageStrings = {
     'en': {
         'translation': {
-            
-            //Has responses for a "good" discussion branch (user is giving positive feedback).
+            ADVICES: [
+                'Sometimes the most productive thing you can do is relax. ',
+                'The time to relax is when you do not have time for it. ',
+                'If you ar having trouble sleeping, try putting some lavender oil on yor feet',
+                'Take a quick break from your busy life and try meditating for a few minutes',
+                'The mind should be allowed some relaxation, that it may return to its work all the better for the rest. ',
+                "Relaxation means releasing all concern and tension and letting the natural order of life flow through one's being. ",
+                'Your mind will answer most questions if you learn to relax and wait for the answer. ',
+                "If you are feeling down, try working on a hobby to keep your mind occupied.",
+                "Isolation can be a key factor of depression. Contact a friend or family member and have a conversation with them.",
+                "Overworking and continuous stress can lead to feelings of depression or hopelessness. Try out different strategies for coping with stress to see what works best for you.",
+                "If you notice mood changes during fall or winter, you may have a case of seasonal affective disorder. Do not worry, it is only temporary, but if these mood swings escalate, you may want to seek medical help.",
+                'Make sure you floss your teeth today! Its more important than you think.',
+                'Give someone a hug today.',
+                'Dont sweat the small things.',
+            ],
+            EXTREME: [
+                "Don't do it! I don't want you to die. ",
+                "There are people that love you. ",
+                'There are still people here that need you. ',
+                "Things will get better tomorrow. ",
+                "You are a valuable person, don't think any less of yourself.",
+                "You deserve good health and a positive outlook on life.",
+                "Most, if not all, of the struggles that you are experiencing right now are temporary.",
+                "Your life is too valuable to give up on.",
+                "Don't let your problems get the best of you, there is still so much to live for.",
+            ],
+            QUESTIONS: [
+                "How often did you feel little interest or pleasure in doing things?",
+                "How often did you feel down, depressed or hopeless?",
+                'How often did you have trouble falling or staying asleep, or sleeping too much?',
+                "How often did you feel tired or had little energy?",
+                "How often did you have a poor appetite or experience overeating?",
+                "How often did you feel bad about yourself or feel that you are a failure or feel like you let yourself or others down?",
+                "How often did you struggle to concentrate on things, such as reading a book or watching television?",
+                "How often did you move or speak slower or quicker than usual such that other people noticed?",
+                "How ofthen did you have thoughts that you would be better off dead, or of hurting yourself?",
+            ],
+            STORY: [
+                "This is a personal story from Nhan. I lost my wallet. ",
+                "This is a personal story from Nhan. I'm single. ",
+                "This is a personal story from Anthony. Nhan said I am annoying. ",
+                "This is a personal story from Anothony. My parents are homeless and I'm trying to finish college so i can support them. ",
+                "This is a personal story from Juan. I don't have a sad story. ",
+                "This is a personal story from Juan. This is Nhan saying on Juan behalf, He doesn't really have any sad story. "
+            ],
             GOODDISCUSSION: [
                 "That's great to hear! ",
-                "I'm glad to hear that.",
-                "That's great news.",
-                "I am very happy to hear that!",
+                "I'm glad to hear that. ",
+                "That's great news. ",
+                "I am very happy to hear that! ",
             ],
-            //Has responses for a "neutral" discussion branch (user is giving average feedback).
             NEUTRALDISCUSSION: [
-                "That's good to hear.",
-                "That's nice.",
-                "That's good.",
-                "On the bright side, things could be worse.",
+                "That's good to hear .",
+                "That's nice. ",
+                "That's good. ",
+                "On the bright side, things could be worse. ",
             ],
-            //Has responses for a "bad" discussion branch (user is giving negative feedback).
             BADDISCUSSION: [
-                "I'm really sorry to hear that.",
-                "I'm sorry to hear that.",
-                "That's unfortunate, I'm sure things will get better.",
+                "I'm really sorry to hear that. ",
+                "I'm sorry to hear that. ",
+                "That's unfortunate, I'm sure things will get better. ",
             ],
-            //Open-ended questions to ask the user.
             OPENASK: [
                 "What did you do today?",
                 "What happened today?",
@@ -41,24 +77,20 @@ const languageStrings = {
                 "What else happened today?",
                 "Did you do anything else today?",
             ],
-            //Restricted (yes/no) questions to ask the user
             RESTRICTEDASK: [
                 "Did you do anything today?",
                 "Did you do anything interesting today?",
                 "Did you do anything fun today?",
             ],
-            //Responses to a "bad" discussion tree.
             IFTHISISBAD: [
                 "Be kind to yourself",
                 "Keep your head up, Things will get brighter",
                 "That's fake news. If you change your mentality, you can change your reality",
                 "It's ok to give yourself some space to breathe and regroup.",
             ],
-            //Message that tells the user all of the functionalities of the Good Vibes application.
             OPTION_MESSAGE: "We have four options. You can say Advice to listen to a piece of advice, say Take a test to take "
                 + "our assessment test, or discuss my feelings to start  discussing your feelings, and story to listen to stories ",
-            //Greeting messages to tell the user.
-			FEELING_MESSEGE: 'How are you feeling today?',
+            FEELING_MESSEGE: 'How are you feeling today?',
             'WELCOME1': 'Welcome to good vibes!',//<say-as interpret-as="interjection">dun dun dun!</say-as>
             'WELCOME2': 'Greetings!',
             'WELCOME3': 'Hello there!',
@@ -74,11 +106,6 @@ const APP_ID = undefined;  // TODO replace with your app ID (OPTIONAL).
 const Alexa = require("alexa-sdk");
 const https = require("https");
 
-//the first three constants are references to the list of strings in their corresponding file
-const advice = require("ad-strings");
-const question = require("questions");
-const extreme = require("extreme");
-
 exports.handler = function (event, context, callback) {
     let alexa = Alexa.handler(event, context);
     alexa.appId = APP_ID; //
@@ -90,9 +117,6 @@ exports.handler = function (event, context, callback) {
 }
 
 const handlers = {
-	/**
-    * 'AMAZON.CancelIntent' is used for exiting the application.
-    */
     'AMAZON.CancelIntent': function () {
 
         let say = 'Goodbye.';
@@ -101,14 +125,10 @@ const handlers = {
 
         this.emit(':responseReady');
     },
-    /**
-    * 'AMAZON.HelpIntent' is used provide the user with all functionalities
-    * of the Good Vibes application.
-    */
-    'AMAZON.HelpIntent': function () {
+    'helpIntent': function () {
         var speechOutput
         if (this.attributes.skillState == "Numbers") {
-            speechOutput = 'You are in the middle of a test, Please choose a number from 0 to 3';
+            speechOutput = 'You are in the middle of a test, Please say a number from zero to three, or say never, often, etc.';
             this.response.speak(speechOutput);
             this.response.shouldEndSession(false);
             this.emit(':responseReady');
@@ -132,17 +152,21 @@ const handlers = {
             this.emit(':responseReady');
         }
         else {
-            let say = this.t('OPTION_MESSAGE');
-            this.response
-                .speak(say)
-                .shouldEndSession(false);
-            this.emit(':responseReady');
+            
+            if(this.event.request.intent.slots.version.value != null){
+                let say = this.t('OPTION_MESSAGE');
+                this.response
+                    .speak(say)
+                    .shouldEndSession(false);
+                this.emit(':responseReady');
+            }
+            let say = this.t('You can say advice, discuss, test, story, or full help');
+                this.response
+                    .speak(say)
+                    .shouldEndSession(false);
+                this.emit(':responseReady');
         }
     },
-    /**
-    * 'AMAZON.StopIntent' is used to handle all cases in which
-    * the user wants to stop the current task that they are on.
-    */
     'AMAZON.StopIntent': function () {
         var speechOutput
         if (this.attributes.skillState == "Numbers") {
@@ -182,14 +206,6 @@ const handlers = {
         }
 
     },
-    /**
-    * The 'DiscussFeeling' function makes an attempt to maintain 
-    * a dialogue with the user. It uses a series of open-ended questions
-    * to keep the user in a loop of dialogue until the user ends the loop.
-    * This is meant to obtain as much information from the user as possible for better 
-    * feedback from the device to the user. It is also meant to provide a more comfortable
-    * and personal environment to the user. 
-    */
     'DiscussFeeling': function () {
         var speechOutput;
         if (this.attributes.skillState == 'quizMainMenu') {
@@ -255,12 +271,6 @@ const handlers = {
         }
 
     },
-    /**
-    * 'Advice' is referenced for responses resulting from a 
-    * user utterance that calls the 'Advice' function. This 
-    * function offers advice that might be helpful to a user
-    * that is experiencing an unhealthy state of mind.
-    */
     'Advice': function () {
         var speechOutput;
         if (this.attributes.skillState == 'quizMainMenu') {
@@ -282,18 +292,12 @@ const handlers = {
             this.emit(':ask', randomAD);
         }
     },
-    /**
-    * 'Test' is referenced for responses resulting from a 
-    * user utterance that calls the 'Test' function. The question
-    * set and scoring system come from the Patient Health 
-    * Questionnaire (PHQ-9)
-    */
     'Test': function () {
         newSessionHandler.call(this);
         var speechOutput;
         var reprompt;
 
-        //Initiation of test
+        //Initiation of game
         if (this.attributes.skillState == 'middiscuss') {
             speechOutput = 'We are in the middle of a discussion. Would you like to end it?';
             this.response.speak(speechOutput).shouldEndSession(false);
@@ -321,6 +325,13 @@ const handlers = {
             this.response.shouldEndSession(false);
             this.emit(':responseReady');
         }
+        else if (this.attributes.skillState == 'nameiss')
+        {
+            speechOutput = "Please tell me your name. " ;
+            this.response.speak(speechOutput);
+            this.response.shouldEndSession(false);
+            this.emit(':responseReady');
+        }
         else {
             speechOutput = 'You are already in the middle of a quiz. Please choose a number from 0 to 3: ';
             this.response.speak(speechOutput);
@@ -328,12 +339,6 @@ const handlers = {
             this.emit(':responseReady');
         }
     },
-    /**
-    * 'EXTREME' is referenced for responses resulting from a 
-    * user utterance that calls the 'EXTREME' function. This 
-    * covers cases in which a user gives an utterance that 
-    * reflects signs of self harm or violence.
-    */
     'EXTREME': function () {
         const extreArr = this.t('EXTREME');
         const extreIndex = Math.floor(Math.random() * extreArr.length);
@@ -346,19 +351,24 @@ const handlers = {
         if (this.attributes.skillState == 'middiscuss') {
            // let filledSlots = delegateSlotCollection.call(this);
             //let slotValues = getSlotValues(filledSlots);
+            if(this.event.request.intent.slots.movie.value != null)
+            {
+                const speechOutput = this.event.request.intent.slots.movie.value+ " is a great movie. did you enjoy it?"; //+ slotValues.type.resolved;
+                //speechOutput += ". Did you win?";
+                this.response.speak(speechOutput).shouldEndSession(false);
+                this.emit(':responseReady');
+            }
             const speechOutput = "When I still have my human body, I play tons of " + this.event.request.intent.slots.sport.value +". Did your team win?"; //+ slotValues.type.resolved;
             //speechOutput += ". Did you win?";
             this.response.speak(speechOutput).shouldEndSession(false);
             this.emit(':responseReady');
         }
+        const speechOutput = "hmm, you are in the middle of something. please say stop to get out."; //+ slotValues.type.resolved;
+            
+            this.response.speak(speechOutput).shouldEndSession(false);
+            this.emit(':responseReady');
 
-        // Create speech output
-        //this.emit(':ask', this.t("this is Activity"));
     },
-    /**
-    * 'LaunchRequest' is used to handle the Good Vibes application startup.
-    * This includes handling startups for new and current users in different ways.
-    */
     'LaunchRequest': function () {
         //this.attributes['userName']= null;
         let say = this.t('WELCOME1') + ' ' + this.t('HELP');
@@ -391,14 +401,10 @@ const handlers = {
         }
 
     },
-    /**
-    * 'clearName' is used to clear user data from the DynamoDB Table instance.
-    * This is useful for debugging purposes, but also gives users the satisfaction
-    * of knowing they have power over their data.
-    */
     'clearName': function () {
         this.attributes['story'] = null
         this.attributes['userName'] = null;
+        this.attributes['Score'] = null;
         let say = "Database of Username and Story Intentions set back to null";
         this.attributes.skillState = null;
         //this.response
@@ -407,12 +413,38 @@ const handlers = {
             this.response.speak(say).shouldEndSession(false);
         this.emit(':responseReady');
     },
-    /**
-    * 'UserNames' is used to handle user utterances regarding their names. These names
-    * are stored in the DynamoDB Table to be referenced between user sessions. This is to 
-    * promote a more unique and personal environment to the user and suggests that Good Vibes
-    * remembers who you are, because you matter.
-    */
+    'AMAZON.FallbackIntent': function () {
+        var speechOutput = '';
+     if (this.attributes.skillState == 'middiscuss') {
+            speechOutput = 'That is interesting. How was it?';
+            this.response.speak(speechOutput).shouldEndSession(false);
+            this.emit(':responseReady');
+        }
+        else if (this.attributes.skillState == 'discuss') {
+            this.attributes.skillState = null;
+            speechOutput = 'I asked how are you feeling today. Maybe you should take a rest. What would you like to do next?';
+            this.response.speak(speechOutput).shouldEndSession(false);
+            this.emit(':responseReady');
+        }
+    else if (this.attributes.skillState == 'Numbers')
+    {
+        speechOutput = 'You are in the middle of the quiz, please answer 0 to 3, or never, often, etc.';
+        this.response.speak(speechOutput).shouldEndSession(false);
+        this.emit(':responseReady');
+    }
+    else if (this.attributes.skillState == 'quizMainMenu')
+    {
+        speechOutput = ' Please answer yes to enter the quiz or no to come back later.';
+        this.response.speak(speechOutput).shouldEndSession(false);
+        this.emit(':responseReady');
+    }
+        let say = 'The skill did not quite understand what you wanted to do.  Do you want to try something else? ';
+        this.response
+            .speak(say)
+            .listen(say);
+            this.emit(':responseReady');
+     },
+     
     'UserNames': function () {
         if (this.attributes.skillState == 'nameiss') {
             this.attributes['userName'] = this.event.request.intent.slots.Name.value;
@@ -423,8 +455,16 @@ const handlers = {
             // Create speech output
             this.response.speak(say).shouldEndSession(false);
             this.attributes.skillState = null;
+
             this.emit(':responseReady');
             
+        }
+        else if (this.attributes.skillState == 'discuss') {
+            this.attributes.skillState = null;
+            var speechOutput = '';
+            speechOutput = 'I asked how are you feeling today. Maybe you should take a rest. What would you like to do next?';
+            this.response.speak(speechOutput).shouldEndSession(false);
+            this.emit(':responseReady');
         }
         else if (this.attributes.skillState == null && this.event.request.intent.slots.nameIs.value != null) {
             let say = "are you sure you wanna change your name from " + this.attributes['userName'] + " to " + this.event.request.intent.slots.Name.value + "?";
@@ -434,7 +474,9 @@ const handlers = {
               //  .speak(say)
                 //.listen('try again, ' + say);
             // Create speech output
+
             this.response.speak(say).shouldEndSession(false);
+            
             this.emit(':responseReady');
 
         }
@@ -444,15 +486,13 @@ const handlers = {
               //  .speak(say)
                // .listen('try again, ' + say);
             // Create speech output
+            this.emitWithState("AMAZON.FallbackIntent");
+            
             this.response.speak(say).shouldEndSession(false);
             this.emit(':responseReady');
         }
 
     },
-     /**
-    * 'AMAZON.YesIntent' this function handles all cases in which the user
-    * says 'Yes' and is handled specifically based on the program state.
-    */
     'AMAZON.YesIntent': function () {
         var speechOutput;
         if (this.attributes.skillState == 'quizMainMenu') {
@@ -478,7 +518,7 @@ const handlers = {
            
         }
         else if (this.attributes.skillState == 'Numbers') {
-            speechOutput = 'You are in the middle of a test, Please choose a number from 0 to 3 ';
+            speechOutput = 'You are in the middle of a test, Please choose a number from 0 to 3, or never, often, etc.';
             this.response.speak(speechOutput).shouldEndSession(false);
             this.emit(':responseReady');
         }
@@ -496,8 +536,14 @@ const handlers = {
             this.emit(':responseReady');
         }
         else if (this.attributes.skillState == 'middiscuss') {
-            this.attributes.skillState = null;
-            speechOutput = 'I enjoy these conversations. I am excited to hear from you again.';
+            this.attributes.skillState = 'enddiscuss';
+            speechOutput = "That's great! did you do anything else today?";
+            this.response.speak(speechOutput).shouldEndSession(false);
+            this.emit(':responseReady');
+        }
+        else if (this.attributes.skillState == 'enddiscuss') {
+            this.attributes.skillState = 'middiscuss';
+            speechOutput = "What else did you do today?";
             this.response.speak(speechOutput).shouldEndSession(false);
             this.emit(':responseReady');
         }
@@ -507,13 +553,9 @@ const handlers = {
             this.emit(':responseReady');
         }
     },
-    /**
-    * 'newstory' is used to provide the user with a personal developer story. It will search for a story from
-    * the story collection file and read it to the user. This is to promote the idea that everybody goes through
-    * rough patches in their lives, but we all are capable of getting through it.
-    */
     'newstory': function () {
          if (this.attributes.skillState == 'middiscuss') {
+             this.attributes.skillState = 'enddiscuss';
             speechOutput = 'We are in the middle of a discussion. Would you like to end it?';
             this.response.speak(speechOutput).shouldEndSession(false);
             this.emit(':responseReady');
@@ -532,7 +574,7 @@ const handlers = {
         var theStory = this.attributes['story'];
         var indexStory = this.attributes['newType'];
         var speechOutput;
-        speechOutput = 'This is from default story. ';
+        speechOutput = '';
         if (this.event.request.intent.slots.type.value == null) {
             var randomIndex = randomIndexOfArray(theStory);
             speechOutput += theStory[randomIndex];
@@ -560,12 +602,11 @@ const handlers = {
             }
 
         }
+        speechOutput += " what else can i help you with?"
         this.response.speak(speechOutput).shouldEndSession(false);
         this.emit(':responseReady');
     },
-    /** The 'Numbers' function deals with the logic behind calculating the user score 
-    * for the depression assement test
-    */
+    
     'Numbers': function () {
         var speechOutput;
          if (this.attributes.skillState == 'middiscuss') {
@@ -695,10 +736,30 @@ const handlers = {
             this.response.speak(speechOutput).shouldEndSession(false);
             this.emit(':responseReady');
     },
-	/**
-    * 'AMAZON.NoIntent' is referenced anytime a user says 'No' and is handled in
-    * specific ways depending on the state of the application.
-    */
+    'goodRespond': function () {
+        var speechOutput = null;
+        if (this.attributes.skillState == 'Numbers'){
+            speechOutput = 'Please answer between 0 to 3, or never, often, etc';
+            this.response.speak(speechOutput).shouldEndSession(false);
+            this.emit(':responseReady');
+        }
+        else if (this.attributes.skillState == 'middiscuss'){
+            this.attributes.skillState = 'enddiscuss';
+            speechOutput = "That's great. did you do anything else?";
+            this.response.speak(speechOutput).shouldEndSession(false);
+            this.emit(':responseReady');
+        }
+        else
+        {
+            this.attributes.skillState = null;
+            speechOutput = 'oh nice';
+            this.response.speak(speechOutput).shouldEndSession(false);
+            this.emit(':responseReady');
+        }
+        speechOutput = 'Very nice';
+            this.response.speak(speechOutput).shouldEndSession(false);
+            this.emit(':responseReady');
+    },
     'AMAZON.NoIntent': function () {
         var speechOutput;
         if (this.attributes.skillState == 'Numbers') {
@@ -730,7 +791,14 @@ const handlers = {
             this.emit(':responseReady');
         }
         else if (this.attributes.skillState == 'middiscuss') {
+            this.attributes.skillState = 'enddiscuss';
             speechOutput = 'Alright, did you do anything else today?';
+            this.response.speak(speechOutput).shouldEndSession(false);
+            this.emit(':responseReady');
+        }
+        else if (this.attributes.skillState == 'enddiscuss') {
+            this.attributes.skillState = null;
+            speechOutput = 'Alright, talk to you later, peace fam. what else can i help you?';
             this.response.speak(speechOutput).shouldEndSession(false);
             this.emit(':responseReady');
         }
@@ -749,23 +817,7 @@ const handlers = {
 
 
     },
-    'AMAZON.FallbackIntent': function () {
-        var speechOutput = '';
-     if (this.attributes.skillState == 'middiscuss') {
-            speechOutput = 'That is interesting. How was it?';
-            this.response.speak(speechOutput).shouldEndSession(false);
-            this.emit(':responseReady');
-        }
-        let say = 'The skill did not quite understand what you wanted to do.  Do you want to try something else? ';
-        this.response
-            .speak(say)
-            .listen(say);
-            this.emit(':responseReady');
-     },
-     /**
-    * 'Unhandled' is referenced for any user utterances that do not pertain to any of the
-    * functionalities of the Good Vibes application.
-    */
+
     'Unhandled': function () {
         var speechOutput = '';
      if (this.attributes.skillState == 'middiscuss') {
